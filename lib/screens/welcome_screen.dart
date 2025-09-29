@@ -1,14 +1,15 @@
 import 'package:flutter/material.dart';
 import 'login_screen.dart';
-import 'register_screen.dart';
 
 class WelcomeScreen extends StatelessWidget {
   const WelcomeScreen({super.key});
 
   @override
   Widget build(BuildContext context) {
+    final theme = Theme.of(context);
+
     return Scaffold(
-      backgroundColor: Colors.white,
+      backgroundColor: theme.scaffoldBackgroundColor,
       body: SafeArea(
         child: Center(
           child: Padding(
@@ -16,34 +17,38 @@ class WelcomeScreen extends StatelessWidget {
             child: Column(
               mainAxisAlignment: MainAxisAlignment.center,
               children: [
+                // Logo principal
                 Image.network(
                   'https://res.cloudinary.com/dd5phul5v/image/upload/v1751846282/LOGOTIPO.2_ekafjt.png',
                   height: 180,
                 ),
                 const SizedBox(height: 28),
+                // Título
                 Text(
                   'Bienvenido a',
-                  style: TextStyle(
-                    fontFamily: 'SFProDisplay',
-                    fontSize: 20,
+                  style: theme.textTheme.bodyLarge?.copyWith(
                     color: Colors.black87,
                   ),
                 ),
+                // Marca ULenguage
                 RichText(
+                  textAlign: TextAlign.center,
                   text: TextSpan(
-                    style: TextStyle(
-                      fontFamily: 'SFProDisplay',
+                    style: theme.textTheme.headlineLarge?.copyWith(
                       fontSize: 32,
                       color: Colors.black,
                     ),
                     children: [
-                      const TextSpan(
+                      TextSpan(
                         text: "U",
-                        style: TextStyle(fontWeight: FontWeight.bold),
+                        style: theme.textTheme.headlineLarge?.copyWith(
+                          fontWeight: FontWeight.bold,
+                          color: Colors.black,
+                        ),
                       ),
                       TextSpan(
                         text: "Lenguage",
-                        style: TextStyle(
+                        style: theme.textTheme.headlineLarge?.copyWith(
                           color: Colors.red[800],
                           fontWeight: FontWeight.w900,
                         ),
@@ -51,63 +56,55 @@ class WelcomeScreen extends StatelessWidget {
                     ],
                   ),
                 ),
-                const SizedBox(height: 40),
-                Row(
-                  children: [
-                    Expanded(
-                      child: ElevatedButton(
-                        onPressed: () {
-                          Navigator.of(context).push(
-                            MaterialPageRoute(
-                              builder: (ctx) => const LoginScreen(),
-                            ),
-                          );
-                        },
-                        style: ElevatedButton.styleFrom(
-                          backgroundColor: Colors.red[700],
-                          padding: const EdgeInsets.symmetric(vertical: 14),
-                          shape: RoundedRectangleBorder(
-                            borderRadius: BorderRadius.circular(6),
-                          ),
+                const SizedBox(height: 18),
+                // Subtítulo inspirador
+                Text(
+                  "Aprende, traduce y conecta\ncon el mundo andino.",
+                  textAlign: TextAlign.center,
+                  style: theme.textTheme.titleMedium?.copyWith(
+                    fontSize: 18,
+                    color: Colors.grey[800],
+                  ),
+                ),
+                const SizedBox(height: 52),
+                // Botón principal mejorado
+                SizedBox(
+                  width: double.infinity,
+                  child: ElevatedButton(
+                    onPressed: () {
+                      Navigator.of(context).push(
+                        MaterialPageRoute(
+                          builder: (ctx) => const LoginScreen(),
                         ),
-                        child: const Text(
-                          'Iniciar',
-                          style: TextStyle(
-                            fontFamily: 'SFProDisplay',
-                            fontSize: 18,
-                            color: Colors.white,
-                          ),
-                        ),
+                      );
+                    },
+                    style: ElevatedButton.styleFrom(
+                      backgroundColor: Colors.red[700],
+                      foregroundColor: Colors.white,
+                      padding: const EdgeInsets.symmetric(
+                        vertical: 18,
+                        horizontal: 6,
+                      ),
+                      elevation: 6,
+                      shape: RoundedRectangleBorder(
+                        borderRadius: BorderRadius.circular(14),
+                      ),
+                      shadowColor: Colors.red[200],
+                      textStyle: theme.textTheme.titleLarge?.copyWith(
+                        fontWeight: FontWeight.bold,
+                        fontSize: 22,
+                        letterSpacing: 1.2,
                       ),
                     ),
-                    const SizedBox(width: 12),
-                    Expanded(
-                      child: OutlinedButton(
-                        onPressed: () {
-                          Navigator.of(context).push(
-                            MaterialPageRoute(
-                              builder: (ctx) => const RegisterScreen(),
-                            ),
-                          );
-                        },
-                        style: OutlinedButton.styleFrom(
-                          padding: const EdgeInsets.symmetric(vertical: 14),
-                          side: BorderSide(color: Colors.red[700]!),
-                          shape: RoundedRectangleBorder(
-                            borderRadius: BorderRadius.circular(6),
-                          ),
-                        ),
-                        child: Text(
-                          'Registrarte',
-                          style: TextStyle(
-                            fontFamily: 'SFProDisplay',
-                            fontSize: 18,
-                            color: Colors.red[700],
-                          ),
-                        ),
+                    child: const Text(
+                      '¡Comienza tu viaje andino!',
+                      style: TextStyle(
+                        fontFamily: 'SFProDisplay',
+                        fontWeight: FontWeight.w700,
+                        fontSize: 20,
                       ),
                     ),
-                  ],
+                  ),
                 ),
               ],
             ),
