@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
 import '../widgets/navbar_temp.dart';
-
 import 'translation_screen.dart';
 import 'ocr_screen.dart';
 import 'explore_screen.dart';
@@ -14,8 +13,10 @@ class HomeScreen extends StatefulWidget {
 }
 
 class _HomeScreenState extends State<HomeScreen> {
-  // Simula que siempre está conectado
-  bool conectado = true;
+  final String nombreUsuario = "Fabricio Aylas";
+  int _currentIndex = 0;
+
+  static const double progreso = 0.75;
 
   static const List<Map<String, dynamic>> paquetesLocales = [
     {
@@ -25,10 +26,6 @@ class _HomeScreenState extends State<HomeScreen> {
     },
     {"nombre": "Guía de Cuzco", "tamano": "32 MB", "instalado": false},
   ];
-  static const double progreso = 0.75;
-  int _currentIndex = 0;
-
-  final String nombreUsuario = "Fabricio Aylas"; // Usaremos esta variable
 
   void _onNavBarTap(int i) {
     setState(() => _currentIndex = i);
@@ -65,135 +62,235 @@ class _HomeScreenState extends State<HomeScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: const Color(0xFFE4E4E4),
+      backgroundColor: const Color(0xFFF6F5FA),
       body: SafeArea(
         child: SingleChildScrollView(
           child: Column(
             children: [
-              const SizedBox(height: 18),
-              Padding(
-                padding: const EdgeInsets.symmetric(horizontal: 24),
-                child: Row(
-                  mainAxisAlignment: MainAxisAlignment.center,
+              // HEADER
+              Container(
+                decoration: const BoxDecoration(
+                  color: Color(0xFFDA2C38),
+                  borderRadius: BorderRadius.only(
+                    bottomLeft: Radius.circular(30),
+                    bottomRight: Radius.circular(30),
+                  ),
+                  boxShadow: [
+                    BoxShadow(
+                      color: Color(0x1A000000),
+                      blurRadius: 20,
+                      offset: Offset(0, 4),
+                    ),
+                  ],
+                ),
+                padding: const EdgeInsets.fromLTRB(0, 18, 0, 18),
+                child: Column(
                   children: [
-                    Expanded(
-                      child: _StatusButton(
-                        icon: Icons.wifi,
-                        label: "Conectado",
-                        color: Colors.green,
-                        iconColor: Colors.green,
-                        borderColor: Colors.green,
-                        onTap: () {},
+                    Row(
+                      mainAxisAlignment: MainAxisAlignment.center,
+                      children: [
+                        ClipRRect(
+                          borderRadius: BorderRadius.circular(14),
+                          child: Image.network(
+                            'https://res.cloudinary.com/dd5phul5v/image/upload/v1751846282/LOGOTIPO.2_ekafjt.png',
+                            height: 44,
+                            width: 44,
+                            fit: BoxFit.cover,
+                          ),
+                        ),
+                        const SizedBox(width: 12),
+                        const Text(
+                          "ULenguage",
+                          style: TextStyle(
+                            color: Colors.white,
+                            fontWeight: FontWeight.bold,
+                            fontSize: 24,
+                            letterSpacing: -0.5,
+                            fontFamily: 'SFProDisplay',
+                          ),
+                        ),
+                      ],
+                    ),
+                    const SizedBox(height: 14),
+                    const Row(
+                      mainAxisAlignment: MainAxisAlignment.center,
+                      children: [
+                        _HeaderChip(
+                          icon: Icons.wifi,
+                          label: "Conectado",
+                          color: Color(0xFF69C779),
+                        ),
+                        SizedBox(width: 12),
+                        _HeaderChip(
+                          icon: Icons.inventory_2_rounded,
+                          label: "3 paquetes",
+                          color: Colors.white,
+                          textColor: Color(0xFFDA2C38),
+                        ),
+                      ],
+                    ),
+                  ],
+                ),
+              ),
+              Padding(
+                padding: const EdgeInsets.symmetric(
+                  horizontal: 20,
+                  vertical: 24,
+                ),
+                child: Column(
+                  children: [
+                    const Icon(
+                      Icons.favorite,
+                      color: Color(0xFFDA2C38),
+                      size: 44,
+                    ),
+                    const SizedBox(height: 8),
+                    Text(
+                      "¡Bienvenido, $nombreUsuario!",
+                      style: const TextStyle(
+                        fontWeight: FontWeight.bold,
+                        color: Color(0xFFDA2C38),
+                        fontSize: 22,
+                        fontFamily: 'SFProDisplay',
                       ),
                     ),
-                    Container(
-                      width: 1,
-                      height: 44,
-                      color: Colors.black.withAlpha(46),
-                      margin: const EdgeInsets.symmetric(horizontal: 8),
+                    const SizedBox(height: 4),
+                    const Text(
+                      "Tu aventura cultural continúa",
+                      style: TextStyle(fontSize: 15, color: Color(0xFF656565)),
                     ),
-                    Expanded(
-                      child: _StatusButton(
-                        icon: Icons.inventory_2_rounded,
-                        label: "Paquetes",
-                        color: Colors.red,
-                        iconColor: Colors.red,
-                        borderColor: Colors.red,
-                        onTap: () {},
+                    const SizedBox(height: 18),
+                    Card(
+                      elevation: 0,
+                      color: const Color(0xFFFDF2F3),
+                      shape: RoundedRectangleBorder(
+                        borderRadius: BorderRadius.circular(22),
+                      ),
+                      child: Padding(
+                        padding: const EdgeInsets.symmetric(
+                          vertical: 18,
+                          horizontal: 18,
+                        ),
+                        child: Column(
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          children: [
+                            Row(
+                              children: [
+                                const Icon(
+                                  Icons.emoji_events_outlined,
+                                  color: Color(0xFFDA2C38),
+                                ),
+                                const SizedBox(width: 7),
+                                const Text(
+                                  "Progreso Cultural",
+                                  style: TextStyle(
+                                    fontWeight: FontWeight.bold,
+                                    fontSize: 17,
+                                    fontFamily: 'SFProDisplay',
+                                  ),
+                                ),
+                                const Spacer(),
+                                Text(
+                                  "${(progreso * 100).toInt()}%",
+                                  style: const TextStyle(
+                                    color: Color(0xFFDA2C38),
+                                    fontWeight: FontWeight.bold,
+                                    fontSize: 22,
+                                  ),
+                                ),
+                              ],
+                            ),
+                            const SizedBox(height: 4),
+                            const Text(
+                              "Explorando culturas andinas",
+                              style: TextStyle(
+                                fontWeight: FontWeight.w500,
+                                fontSize: 14,
+                                color: Color(0xFFDA2C38),
+                              ),
+                            ),
+                            const SizedBox(height: 14),
+                            ClipRRect(
+                              borderRadius: BorderRadius.circular(7),
+                              child: const LinearProgressIndicator(
+                                value: progreso,
+                                minHeight: 11,
+                                backgroundColor: Color(0xFFE1E2E1),
+                                valueColor: AlwaysStoppedAnimation<Color>(
+                                  Color(0xFFDA2C38),
+                                ),
+                              ),
+                            ),
+                            const SizedBox(height: 10),
+                            const Text(
+                              "Continúa explorando para desbloquear nuevos horizontes",
+                              style: TextStyle(
+                                fontSize: 13,
+                                color: Color(0xFF757575),
+                              ),
+                            ),
+                          ],
+                        ),
                       ),
                     ),
                   ],
                 ),
               ),
-              const SizedBox(height: 12),
-              Text(
-                "Bienvenido de vuelta $nombreUsuario!",
-                style: const TextStyle(
-                  fontSize: 20,
-                  fontWeight: FontWeight.w500,
-                  letterSpacing: -0.5,
-                ),
-              ),
-              const SizedBox(height: 14),
+              // Inspiración / resumen cultural
               Padding(
-                padding: const EdgeInsets.symmetric(
-                  horizontal: 20,
-                  vertical: 6,
-                ),
+                padding: const EdgeInsets.fromLTRB(20, 18, 20, 8),
                 child: Card(
                   elevation: 0,
-                  color: Colors.white,
-                  shape: const RoundedRectangleBorder(
-                    borderRadius: BorderRadius.all(Radius.circular(18)),
+                  color: const Color(0xFFFDF2F3),
+                  shape: RoundedRectangleBorder(
+                    borderRadius: BorderRadius.circular(22),
                   ),
-                  child: Padding(
-                    padding: const EdgeInsets.symmetric(
-                      vertical: 18,
-                      horizontal: 18,
-                    ),
+                  child: const Padding(
+                    padding: EdgeInsets.symmetric(vertical: 22, horizontal: 18),
                     child: Column(
-                      crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
-                        const Text(
-                          "Progreso de Logros",
+                        Icon(
+                          Icons.menu_book_rounded,
+                          color: Color(0xFFDA2C38),
+                          size: 32,
+                        ),
+                        SizedBox(height: 8),
+                        Text(
+                          '"Cada idioma es una ventana al alma de un pueblo"',
+                          textAlign: TextAlign.center,
                           style: TextStyle(
-                            fontWeight: FontWeight.w600,
-                            fontSize: 17,
+                            fontWeight: FontWeight.bold,
+                            fontSize: 16,
+                            color: Color(0xFFDA2C38),
+                            fontFamily: 'SFProDisplay',
                           ),
                         ),
-                        const SizedBox(height: 12),
-                        const ClipRRect(
-                          borderRadius: BorderRadius.all(Radius.circular(6)),
-                          child: LinearProgressIndicator(
-                            value: progreso, // Usando la variable
-                            minHeight: 9,
-                            backgroundColor: Color(0xFFD6D6D6),
-                            valueColor: AlwaysStoppedAnimation<Color>(
-                              Color(0xFFB71C1C),
-                            ),
+                        SizedBox(height: 10),
+                        Text(
+                          "Disfruta aprendiendo y explorando nuevas culturas. Tu conexión con las culturas andinas crece cada día.",
+                          textAlign: TextAlign.center,
+                          style: TextStyle(
+                            color: Color(0xFF444444),
+                            fontSize: 13,
+                            fontFamily: 'SFProDisplay',
                           ),
-                        ),
-                        const SizedBox(height: 6),
-                        Row(
-                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                          children: [
-                            const Text(
-                              "¡Sigue explorando y aprendiendo!",
-                              style: TextStyle(
-                                fontSize: 13,
-                                color: Colors.black87,
-                              ),
-                            ),
-                            Text(
-                              "${(progreso * 100).toInt()} %",
-                              style: const TextStyle(
-                                fontWeight: FontWeight.bold,
-                                fontSize: 13,
-                              ),
-                            ),
-                          ],
                         ),
                       ],
                     ),
                   ),
                 ),
               ),
+              // PAQUETES DISPONIBLES (nuevo diseño)
               Padding(
-                padding: const EdgeInsets.symmetric(
-                  horizontal: 20,
-                  vertical: 3,
-                ),
+                padding: const EdgeInsets.fromLTRB(20, 8, 20, 18),
                 child: Card(
                   elevation: 0,
                   color: Colors.white,
-                  shape: const RoundedRectangleBorder(
-                    borderRadius: BorderRadius.all(Radius.circular(18)),
+                  shape: RoundedRectangleBorder(
+                    borderRadius: BorderRadius.circular(22),
                   ),
                   child: Padding(
-                    padding: const EdgeInsets.symmetric(
-                      vertical: 16,
-                      horizontal: 18,
-                    ),
+                    padding: const EdgeInsets.fromLTRB(18, 18, 18, 10),
                     child: Column(
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
@@ -210,94 +307,13 @@ class _HomeScreenState extends State<HomeScreen> {
                           style: TextStyle(fontSize: 13, color: Colors.black54),
                         ),
                         const SizedBox(height: 14),
-                        for (final p in paquetesLocales)
-                          _PaqueteItem(paquete: p),
+                        for (final paquete in paquetesLocales)
+                          _PaqueteListTile(paquete: paquete),
                       ],
                     ),
                   ),
                 ),
               ),
-              const SizedBox(height: 10),
-              const Padding(
-                padding: EdgeInsets.symmetric(horizontal: 20, vertical: 3),
-                child: Card(
-                  elevation: 0,
-                  color: Colors.white,
-                  shape: RoundedRectangleBorder(
-                    borderRadius: BorderRadius.all(Radius.circular(18)),
-                  ),
-                  child: Padding(
-                    padding: EdgeInsets.symmetric(vertical: 16, horizontal: 18),
-                    child: Column(
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      children: [
-                        Text(
-                          "Funciones Principales:",
-                          style: TextStyle(
-                            fontWeight: FontWeight.w600,
-                            fontSize: 16,
-                          ),
-                        ),
-                        SizedBox(height: 10),
-                      ],
-                    ),
-                  ),
-                ),
-              ),
-              _MainFeatureButton(
-                icon: Icons.translate_rounded,
-                label: "Traducción",
-                color: Colors.red,
-                onTap: () {
-                  Navigator.push(
-                    context,
-                    MaterialPageRoute(
-                      builder: (context) => const TranslationScreen(),
-                    ),
-                  );
-                },
-              ),
-              const SizedBox(height: 10),
-              _MainFeatureButton(
-                icon: Icons.center_focus_strong_rounded,
-                label: "Escaneo (OCR)",
-                color: Colors.blue,
-                onTap: () {
-                  Navigator.push(
-                    context,
-                    MaterialPageRoute(builder: (context) => const OcrScreen()),
-                  );
-                },
-              ),
-              const SizedBox(height: 10),
-              _MainFeatureButton(
-                icon: Icons.explore_outlined,
-                label: "Explorar",
-                color: Colors.orange,
-                onTap: () {
-                  Navigator.push(
-                    context,
-                    MaterialPageRoute(
-                      builder: (context) => const ExploreScreen(),
-                    ),
-                  );
-                },
-              ),
-              const SizedBox(height: 10),
-              _MainFeatureButton(
-                icon: Icons.person_outline,
-                label: "Perfil",
-                color: Colors.green,
-                onTap: () {
-                  Navigator.push(
-                    context,
-                    MaterialPageRoute(
-                      builder: (context) => const ProfileScreen(),
-                    ),
-                  );
-                },
-              ),
-              const SizedBox(height: 22),
             ],
           ),
         ),
@@ -310,92 +326,37 @@ class _HomeScreenState extends State<HomeScreen> {
   }
 }
 
-class _StatusButton extends StatelessWidget {
+class _HeaderChip extends StatelessWidget {
   final IconData icon;
   final String label;
   final Color color;
-  final Color iconColor;
-  final Color borderColor;
-  final VoidCallback onTap;
+  final Color? textColor;
 
-  const _StatusButton({
+  const _HeaderChip({
     required this.icon,
     required this.label,
     required this.color,
-    required this.iconColor,
-    required this.borderColor,
-    required this.onTap,
+    this.textColor,
   });
 
   @override
   Widget build(BuildContext context) {
-    return OutlinedButton.icon(
-      style: OutlinedButton.styleFrom(
-        foregroundColor: iconColor,
-        backgroundColor: Colors.white,
-        side: BorderSide(color: borderColor, width: 1.4),
-        shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(32)),
-        padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 12),
-      ),
-      onPressed: onTap,
-      icon: Icon(icon, color: iconColor, size: 26),
-      label: Text(
-        label,
-        style: TextStyle(
-          color: color,
-          fontSize: 15,
-          fontWeight: FontWeight.w400,
-        ),
-      ),
-    );
-  }
-}
-
-class _PaqueteItem extends StatelessWidget {
-  final Map<String, dynamic> paquete;
-  const _PaqueteItem({required this.paquete});
-
-  @override
-  Widget build(BuildContext context) {
-    final instalado = paquete['instalado'] == true;
     return Container(
-      margin: const EdgeInsets.symmetric(vertical: 6),
-      padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 9),
+      padding: const EdgeInsets.symmetric(horizontal: 13, vertical: 7),
       decoration: BoxDecoration(
-        color: Colors.grey[100],
-        borderRadius: BorderRadius.circular(12),
+        color: color,
+        borderRadius: BorderRadius.circular(32),
       ),
       child: Row(
         children: [
-          Expanded(
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                Text(
-                  paquete["nombre"] ?? "",
-                  style: const TextStyle(
-                    fontWeight: FontWeight.w500,
-                    fontSize: 15,
-                  ),
-                ),
-                const SizedBox(height: 2),
-                Text(
-                  paquete["tamano"] ?? "",
-                  style: const TextStyle(fontSize: 12, color: Colors.black54),
-                ),
-              ],
-            ),
-          ),
-          const SizedBox(width: 8),
-          Container(
-            decoration: BoxDecoration(
-              color: instalado ? Colors.green[100] : Colors.red[100],
-              shape: BoxShape.circle,
-            ),
-            child: Icon(
-              instalado ? Icons.check_circle : Icons.download_rounded,
-              color: instalado ? Colors.green : Colors.red,
-              size: 27,
+          Icon(icon, color: textColor ?? Colors.white, size: 18),
+          const SizedBox(width: 5),
+          Text(
+            label,
+            style: TextStyle(
+              color: textColor ?? Colors.white,
+              fontWeight: FontWeight.w600,
+              fontSize: 13,
             ),
           ),
         ],
@@ -404,42 +365,47 @@ class _PaqueteItem extends StatelessWidget {
   }
 }
 
-class _MainFeatureButton extends StatelessWidget {
-  final IconData icon;
-  final String label;
-  final Color color;
-  final VoidCallback onTap;
-
-  const _MainFeatureButton({
-    required this.icon,
-    required this.label,
-    required this.color,
-    required this.onTap,
-  });
+class _PaqueteListTile extends StatelessWidget {
+  final Map<String, dynamic> paquete;
+  const _PaqueteListTile({required this.paquete});
 
   @override
   Widget build(BuildContext context) {
-    return Material(
-      color: Colors.grey[100],
-      borderRadius: BorderRadius.circular(14),
-      child: InkWell(
+    final bool instalado = paquete['instalado'] == true;
+    return Container(
+      margin: const EdgeInsets.only(bottom: 11),
+      decoration: BoxDecoration(
+        color: const Color(0xFFF6F6F7),
         borderRadius: BorderRadius.circular(14),
-        onTap: onTap,
-        child: Padding(
-          padding: const EdgeInsets.symmetric(vertical: 14, horizontal: 10),
-          child: Row(
-            children: [
-              Icon(icon, color: color, size: 28),
-              const SizedBox(width: 18),
-              Text(
-                label,
-                style: const TextStyle(
-                  fontSize: 17,
-                  color: Colors.black87,
-                  fontWeight: FontWeight.w600,
-                ),
-              ),
-            ],
+      ),
+      child: ListTile(
+        minLeadingWidth: 0,
+        dense: true,
+        contentPadding: const EdgeInsets.symmetric(horizontal: 13, vertical: 6),
+        title: Text(
+          paquete['nombre'] ?? '',
+          style: const TextStyle(
+            fontWeight: FontWeight.w500,
+            color: Colors.black87,
+            fontSize: 15,
+            fontFamily: 'SFProDisplay',
+          ),
+        ),
+        subtitle: Text(
+          paquete['tamano'] ?? '',
+          style: const TextStyle(color: Colors.black54, fontSize: 13),
+        ),
+        trailing: CircleAvatar(
+          backgroundColor: instalado
+              ? const Color(0xFFE5F7EC)
+              : const Color(0xFFFFEBEE),
+          radius: 17,
+          child: Icon(
+            instalado ? Icons.check_circle : Icons.download_rounded,
+            color: instalado
+                ? const Color(0xFF47B881)
+                : const Color(0xFFDA2C38),
+            size: 23,
           ),
         ),
       ),
