@@ -16,12 +16,12 @@ dependencies:
   google_sign_in: ^7.2.0
   flutter_facebook_auth: ^7.1.2
   sign_in_with_apple: ^7.0.1
-  connectivity_plus: ^6.0.1 # <-- Añadido para detectar conexión de red
+  connectivity_plus: ^6.0.1
 
 dev_dependencies:
   flutter_test:
     sdk: flutter
-  flutter_lints: ^3.0.1 # <-- Versión más estable y reciente
+  flutter_lints: ^3.0.1
 
 flutter:
   uses-material-design: true
@@ -30,6 +30,13 @@ flutter:
     - assets/google_icon.png
     - assets/facebook_icon.png
     - assets/apple_icon.png
+    - assets/inka.png
+    - assets/ocr_imaynallam.png
+    - assets/ocr_salesmanager.jpeg
+    - assets/Machu_Picchu.jpg
+    - assets/centro_historico.jpg
+    - assets/Ollantaytambo.jpg
+    - assets/map_cusco.png
 
   fonts:
     - family: SFProDisplay

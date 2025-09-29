@@ -1,4 +1,6 @@
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import '../widgets/navbar_temp.dart';
 
 class ExploreScreen extends StatefulWidget {
   const ExploreScreen({super.key});
@@ -11,8 +13,7 @@ class _ExploreScreenState extends State<ExploreScreen> {
     {
       'id': 0,
       'name': 'Machu Picchu',
-      'img':
-          'https://upload.wikimedia.org/wikipedia/commons/e/eb/Machu_Picchu%2C_Peru.jpg',
+      'img': 'assets/Machu_Picchu.jpg',
       'type': 'Montaña',
       'difficulty': 'Media',
       'rating': 4.9,
@@ -28,8 +29,7 @@ class _ExploreScreenState extends State<ExploreScreen> {
     {
       'id': 1,
       'name': 'Centro Histórico de Cusco',
-      'img':
-          'https://upload.wikimedia.org/wikipedia/commons/1/13/Cusco_Plaza_de_Armas.jpg',
+      'img': 'assets/centro_historico.jpg',
       'type': 'Ciudad',
       'difficulty': 'Fácil',
       'rating': 4.8,
@@ -45,8 +45,7 @@ class _ExploreScreenState extends State<ExploreScreen> {
     {
       'id': 2,
       'name': 'Ollantaytambo',
-      'img':
-          'https://upload.wikimedia.org/wikipedia/commons/3/31/Ollantaytambo-Panorama.jpg',
+      'img': 'assets/Ollantaytambo.jpg',
       'type': 'Ruta Cultural',
       'difficulty': 'Difícil',
       'rating': 4.7,
@@ -61,71 +60,75 @@ class _ExploreScreenState extends State<ExploreScreen> {
     },
   ];
 
-  int? selectedSite; // null = overview, else index
+  int? selectedSite;
   String selectedLang = 'Español';
 
-  // Sitios del mapa de Cusco para "Como llegar"
-  final List<Map<String, String>> mapSites = [
-    {'name': 'Sacsayhuamán', 'lat': '-13.5086', 'lng': '-71.9817'},
-    {'name': 'Plaza de Armas', 'lat': '-13.5150', 'lng': '-71.9780'},
-    {'name': 'Museo Inka', 'lat': '-13.5142', 'lng': '-71.9760'},
-    {'name': 'Barro de San Blas', 'lat': '-13.5148', 'lng': '-71.9728'},
-    {'name': 'Mercado de San Pedro', 'lat': '-13.5180', 'lng': '-71.9798'},
-    {'name': 'Iglesia de la Compañía', 'lat': '-13.5153', 'lng': '-71.9776'},
-    {'name': 'Qoricancha', 'lat': '-13.5192', 'lng': '-71.9770'},
-    {'name': 'Templo de San Cristóbal', 'lat': '-13.5108', 'lng': '-71.9772'},
+  final List<Map<String, dynamic>> mapSites = [
+    {'name': 'Sacsayhuamán', 'dx': 0.18, 'dy': 0.18},
+    {'name': 'Plaza de Armas', 'dx': 0.53, 'dy': 0.41},
+    {'name': 'Museo Inka', 'dx': 0.54, 'dy': 0.36},
+    {'name': 'Barro de San Blas', 'dx': 0.75, 'dy': 0.26},
+    {'name': 'Mercado de San Pedro', 'dx': 0.36, 'dy': 0.61},
+    {'name': 'Iglesia de la Compañía', 'dx': 0.56, 'dy': 0.43},
+    {'name': 'Qoricancha', 'dx': 0.83, 'dy': 0.65},
+    {'name': 'Templo de San Cristóbal', 'dx': 0.23, 'dy': 0.07},
   ];
+
+  int _currentIndex = 3;
 
   @override
   Widget build(BuildContext context) {
     const bg = Color(0xFFF8F7FA);
-    return Scaffold(
+    return CupertinoPageScaffold(
       backgroundColor: bg,
-      appBar: AppBar(
-        title: const Text("Explorar"),
-        backgroundColor: const Color(0xFFDA2C38),
-        elevation: 0,
-        foregroundColor: Colors.white,
-        centerTitle: true,
-        leading: selectedSite != null
-            ? IconButton(
-                icon: const Icon(Icons.arrow_back_ios_new_rounded),
-                onPressed: () => setState(() => selectedSite = null),
-              )
-            : null,
+      navigationBar: const CupertinoNavigationBar(
+        middle: Text(
+          "Explorar",
+          style: TextStyle(color: Colors.white, fontWeight: FontWeight.bold),
+        ),
+        backgroundColor: Color(0xFFDA2C38),
+        border: null,
       ),
-      body: SafeArea(
-        child: Center(
-          child: ConstrainedBox(
-            constraints: const BoxConstraints(maxWidth: 470),
-            child: Padding(
-              padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 12),
-              child: selectedSite == null
-                  ? _OverviewSection(
-                      sites: sites,
-                      onTap: (idx) => setState(() {
-                        selectedSite = idx;
-                        selectedLang = 'Español';
-                      }),
-                    )
-                  : _SiteDetailSection(
-                      site: sites[selectedSite!],
-                      selectedLang: selectedLang,
-                      onLangTap: (l) => setState(() => selectedLang = l),
-                      onComoLlegar: () => showModalBottomSheet(
-                        context: context,
-                        shape: const RoundedRectangleBorder(
-                          borderRadius: BorderRadius.vertical(
-                            top: Radius.circular(24),
-                          ),
+      child: Stack(
+        children: [
+          Center(
+            child: ConstrainedBox(
+              constraints: const BoxConstraints(maxWidth: 560),
+              child: Padding(
+                padding: const EdgeInsets.symmetric(
+                  horizontal: 10,
+                  vertical: 12,
+                ),
+                child: selectedSite == null
+                    ? _OverviewSection(
+                        sites: sites,
+                        onTap: (idx) => setState(() {
+                          selectedSite = idx;
+                          selectedLang = 'Español';
+                        }),
+                      )
+                    : _SiteDetailSection(
+                        site: sites[selectedSite!],
+                        selectedLang: selectedLang,
+                        onLangTap: (l) => setState(() => selectedLang = l),
+                        onComoLlegar: () => showCupertinoModalPopup(
+                          context: context,
+                          builder: (_) =>
+                              _ComoLlegarMapCupertino(mapSites: mapSites),
                         ),
-                        builder: (_) => _ComoLlegarMap(mapSites: mapSites),
+                        onBack: () => setState(() => selectedSite = null),
                       ),
-                      onBack: () => setState(() => selectedSite = null),
-                    ),
+              ),
             ),
           ),
-        ),
+          Align(
+            alignment: Alignment.bottomCenter,
+            child: Navbar(
+              currentIndex: _currentIndex,
+              onTap: (i) => setState(() => _currentIndex = i),
+            ),
+          ),
+        ],
       ),
     );
   }
@@ -137,12 +140,20 @@ class _OverviewSection extends StatelessWidget {
   const _OverviewSection({required this.sites, required this.onTap});
   @override
   Widget build(BuildContext context) {
-    return Material(
-      color: Colors.white,
-      elevation: 6,
-      borderRadius: BorderRadius.circular(22),
+    return Container(
+      decoration: BoxDecoration(
+        color: Colors.white,
+        borderRadius: BorderRadius.circular(30),
+        boxShadow: const [
+          BoxShadow(
+            color: Color(0x11000000),
+            blurRadius: 16,
+            offset: Offset(0, 5),
+          ),
+        ],
+      ),
       child: Padding(
-        padding: const EdgeInsets.fromLTRB(20, 22, 20, 22),
+        padding: const EdgeInsets.fromLTRB(28, 28, 28, 28),
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
@@ -150,60 +161,61 @@ class _OverviewSection extends StatelessWidget {
               "Explorar",
               style: TextStyle(
                 fontWeight: FontWeight.bold,
-                fontSize: 23,
+                fontSize: 24,
                 color: Color(0xFF1B1B1B),
               ),
             ),
-            const SizedBox(height: 5),
+            const SizedBox(height: 2),
             const Text(
               "Descubre las maravillas de la cultura andina.",
-              style: TextStyle(color: Color(0xFF888888), fontSize: 15),
+              style: TextStyle(color: Color(0xFF787878), fontSize: 15.5),
             ),
             const SizedBox(height: 18),
-            TextField(
-              decoration: InputDecoration(
-                hintText: "Buscar sitios o rutas...",
-                prefixIcon: const Icon(Icons.search, color: Color(0xFFDA2C38)),
-                filled: true,
-                fillColor: const Color(0xFFF6F5FA),
-                contentPadding: const EdgeInsets.symmetric(
-                  vertical: 0,
-                  horizontal: 13,
-                ),
-                border: OutlineInputBorder(
-                  borderRadius: BorderRadius.circular(13),
-                  borderSide: BorderSide.none,
-                ),
+            CupertinoTextField(
+              placeholder: "Buscar sitios o rutas...",
+              prefix: const Padding(
+                padding: EdgeInsets.only(left: 8, right: 7),
+                child: Icon(CupertinoIcons.search, color: Color(0xFFDA2C38)),
               ),
               readOnly: true,
-              onTap: () {}, // futuro: filtrar
+              padding: const EdgeInsets.symmetric(vertical: 14, horizontal: 7),
+              decoration: BoxDecoration(
+                color: const Color(0xFFF6F5FA),
+                borderRadius: BorderRadius.circular(13),
+              ),
+              style: const TextStyle(fontSize: 16),
             ),
-            const SizedBox(height: 16),
+            const SizedBox(height: 25),
             const Text(
               "Sitios Populares",
-              style: TextStyle(fontWeight: FontWeight.w600, fontSize: 17),
+              style: TextStyle(
+                fontWeight: FontWeight.w600,
+                fontSize: 17.5,
+                color: Color(0xFFDA2C38),
+              ),
             ),
-            const SizedBox(height: 10),
+            const SizedBox(height: 11),
             ...sites.asMap().entries.map((entry) {
               final idx = entry.key;
               final site = entry.value;
-              return GestureDetector(
-                onTap: () => onTap(idx),
+              return CupertinoButton(
+                padding: EdgeInsets.zero,
+                borderRadius: BorderRadius.circular(18),
+                onPressed: () => onTap(idx),
                 child: Container(
-                  margin: const EdgeInsets.only(bottom: 15),
+                  margin: const EdgeInsets.only(bottom: 18),
                   decoration: BoxDecoration(
                     color: const Color(0xFFF8F7FA),
-                    borderRadius: BorderRadius.circular(16),
+                    borderRadius: BorderRadius.circular(18),
                     border: Border.all(
                       color: const Color(0xFFE2D6DB),
                       width: 1.1,
                     ),
-                    boxShadow: [
+                    boxShadow: const [
                       BoxShadow(
-                        // ignore: deprecated_member_use
-                        color: Colors.black.withOpacity(0.05),
-                        blurRadius: 7,
-                        offset: const Offset(0, 2),
+                        color: Color(0x0D000000),
+                        blurRadius: 8,
+                        offset: Offset(0, 3),
                       ),
                     ],
                   ),
@@ -211,19 +223,19 @@ class _OverviewSection extends StatelessWidget {
                     children: [
                       ClipRRect(
                         borderRadius: const BorderRadius.only(
-                          topLeft: Radius.circular(16),
-                          bottomLeft: Radius.circular(16),
+                          topLeft: Radius.circular(18),
+                          bottomLeft: Radius.circular(18),
                         ),
-                        child: Image.network(
+                        child: Image.asset(
                           site['img'],
-                          width: 84,
+                          width: 92,
                           height: 74,
                           fit: BoxFit.cover,
                         ),
                       ),
                       Expanded(
                         child: Padding(
-                          padding: const EdgeInsets.fromLTRB(14, 10, 10, 10),
+                          padding: const EdgeInsets.fromLTRB(16, 11, 12, 11),
                           child: Column(
                             crossAxisAlignment: CrossAxisAlignment.start,
                             children: [
@@ -231,19 +243,20 @@ class _OverviewSection extends StatelessWidget {
                                 site['name'],
                                 style: const TextStyle(
                                   fontWeight: FontWeight.bold,
-                                  fontSize: 16,
+                                  fontSize: 16.5,
+                                  color: Color(0xFF222222),
                                 ),
                               ),
-                              const SizedBox(height: 1),
+                              const SizedBox(height: 2),
                               Text(
                                 site['type'],
                                 style: const TextStyle(
                                   fontWeight: FontWeight.w500,
-                                  fontSize: 12,
+                                  fontSize: 12.4,
                                   color: Color(0xFFDA2C38),
                                 ),
                               ),
-                              const SizedBox(height: 4),
+                              const SizedBox(height: 6),
                               Row(
                                 children: [
                                   _Badge(
@@ -251,12 +264,12 @@ class _OverviewSection extends StatelessWidget {
                                     color: site['difficulty'] == 'Fácil'
                                         ? const Color(0xFF47B881)
                                         : site['difficulty'] == 'Media'
-                                        ? const Color(0xFFFFA726)
-                                        : const Color(0xFFDA2C38),
+                                        ? const Color(0xFF8E5DD1)
+                                        : const Color(0xFFD34D4D),
                                   ),
-                                  const SizedBox(width: 7),
+                                  const SizedBox(width: 10),
                                   const Icon(
-                                    Icons.star_rounded,
+                                    CupertinoIcons.star_fill,
                                     color: Color(0xFFFDC300),
                                     size: 17,
                                   ),
@@ -264,7 +277,7 @@ class _OverviewSection extends StatelessWidget {
                                     site['rating'].toString(),
                                     style: const TextStyle(
                                       fontWeight: FontWeight.w600,
-                                      fontSize: 13,
+                                      fontSize: 14.2,
                                     ),
                                   ),
                                 ],
@@ -301,71 +314,90 @@ class _SiteDetailSection extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Material(
-      color: Colors.white,
-      elevation: 7,
-      borderRadius: BorderRadius.circular(25),
+    return Container(
+      decoration: BoxDecoration(
+        color: Colors.white,
+        borderRadius: BorderRadius.circular(28),
+        boxShadow: const [
+          BoxShadow(
+            color: Color(0x11000000),
+            blurRadius: 14,
+            offset: Offset(0, 4),
+          ),
+        ],
+      ),
       child: Padding(
-        padding: const EdgeInsets.fromLTRB(22, 22, 22, 27),
+        padding: const EdgeInsets.fromLTRB(26, 22, 26, 32),
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.center,
           children: [
             ClipRRect(
-              borderRadius: BorderRadius.circular(16),
-              child: Image.network(
+              borderRadius: BorderRadius.circular(18),
+              child: Image.asset(
                 site['img'],
-                height: 175,
+                height: 185,
                 width: double.infinity,
                 fit: BoxFit.cover,
               ),
             ),
-            const SizedBox(height: 15),
+            const SizedBox(height: 20),
             Text(
               site['name'],
               style: const TextStyle(
                 fontSize: 22,
                 fontWeight: FontWeight.bold,
                 color: Color(0xFF222222),
+                letterSpacing: 0.02,
               ),
               textAlign: TextAlign.center,
             ),
-            const SizedBox(height: 9),
+            const SizedBox(height: 13),
             Row(
-              mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+              mainAxisAlignment: MainAxisAlignment.center,
               children: [
                 _SiteDetailIconText(
-                  icon: Icons.place_rounded,
+                  icon: CupertinoIcons.location_solid,
                   label: site['type'],
+                  color: const Color(0xFFDA2C38),
                 ),
+                const SizedBox(width: 16),
                 _SiteDetailIconText(
-                  icon: Icons.bar_chart_rounded,
+                  icon: CupertinoIcons.chart_bar_alt_fill,
                   label: site['difficulty'],
+                  color: site['difficulty'] == 'Fácil'
+                      ? const Color(0xFF47B881)
+                      : site['difficulty'] == 'Media'
+                      ? const Color(0xFF8E5DD1)
+                      : const Color(0xFFD34D4D),
                 ),
+                const SizedBox(width: 16),
                 _SiteDetailIconText(
-                  icon: Icons.star_rounded,
+                  icon: CupertinoIcons.star_fill,
                   label: site['rating'].toString(),
+                  color: const Color(0xFFFDC300),
                 ),
               ],
             ),
-            const SizedBox(height: 13),
-            const Align(
+            const SizedBox(height: 20),
+            Align(
               alignment: Alignment.centerLeft,
               child: Padding(
-                padding: EdgeInsets.only(left: 2, bottom: 5),
+                padding: const EdgeInsets.only(left: 2, bottom: 5),
                 child: Row(
                   children: [
-                    Icon(
-                      Icons.menu_book_rounded,
+                    const Icon(
+                      CupertinoIcons.book_solid,
                       color: Color(0xFFDA2C38),
                       size: 21,
                     ),
-                    SizedBox(width: 6),
+                    const SizedBox(width: 6),
                     Text(
                       "Descripción Cultural",
                       style: TextStyle(
                         fontWeight: FontWeight.bold,
                         fontSize: 16,
-                        color: Color(0xFFDA2C38),
+                        color: Colors.grey[900],
+                        letterSpacing: 0.1,
                       ),
                     ),
                   ],
@@ -377,10 +409,10 @@ class _SiteDetailSection extends StatelessWidget {
               langs: const ['Español', 'Inglés', 'Quechua'],
               onTap: onLangTap,
             ),
-            const SizedBox(height: 6),
+            const SizedBox(height: 10),
             Container(
               width: double.infinity,
-              padding: const EdgeInsets.symmetric(vertical: 16, horizontal: 13),
+              padding: const EdgeInsets.symmetric(vertical: 16, horizontal: 14),
               decoration: BoxDecoration(
                 color: const Color(0xFFF6F5FA),
                 borderRadius: BorderRadius.circular(13),
@@ -388,28 +420,27 @@ class _SiteDetailSection extends StatelessWidget {
               child: Text(
                 site['descriptions'][selectedLang] ?? '',
                 style: const TextStyle(
-                  fontSize: 15,
+                  fontSize: 16.2,
                   color: Color(0xFF222222),
                   height: 1.38,
+                  fontWeight: FontWeight.w500,
                 ),
               ),
             ),
-            const SizedBox(height: 22),
-            ElevatedButton(
-              onPressed: onComoLlegar,
-              style: ElevatedButton.styleFrom(
-                backgroundColor: const Color(0xFFDA2C38),
-                minimumSize: const Size.fromHeight(52),
-                shape: RoundedRectangleBorder(
-                  borderRadius: BorderRadius.circular(18),
-                ),
-              ),
-              child: const Text(
-                "Como llegar",
-                style: TextStyle(
-                  fontSize: 17,
-                  fontWeight: FontWeight.bold,
-                  color: Colors.white,
+            const SizedBox(height: 29),
+            SizedBox(
+              width: 190,
+              child: CupertinoButton.filled(
+                borderRadius: BorderRadius.circular(16),
+                padding: const EdgeInsets.symmetric(vertical: 13),
+                onPressed: onComoLlegar,
+                child: const Text(
+                  "Como llegar",
+                  style: TextStyle(
+                    fontSize: 16.5,
+                    fontWeight: FontWeight.bold,
+                    letterSpacing: 0.09,
+                  ),
                 ),
               ),
             ),
@@ -427,16 +458,16 @@ class _Badge extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Container(
-      padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 3),
+      padding: const EdgeInsets.symmetric(horizontal: 13, vertical: 4),
       decoration: BoxDecoration(
         // ignore: deprecated_member_use
-        color: color.withOpacity(0.15),
-        borderRadius: BorderRadius.circular(12),
+        color: color.withOpacity(0.13),
+        borderRadius: BorderRadius.circular(14),
       ),
       child: Text(
         text,
         style: TextStyle(
-          fontSize: 12.8,
+          fontSize: 13.2,
           color: color,
           fontWeight: FontWeight.w700,
         ),
@@ -448,16 +479,25 @@ class _Badge extends StatelessWidget {
 class _SiteDetailIconText extends StatelessWidget {
   final IconData icon;
   final String label;
-  const _SiteDetailIconText({required this.icon, required this.label});
+  final Color color;
+  const _SiteDetailIconText({
+    required this.icon,
+    required this.label,
+    required this.color,
+  });
   @override
   Widget build(BuildContext context) {
     return Row(
       children: [
-        Icon(icon, color: const Color(0xFFDA2C38), size: 19),
-        const SizedBox(width: 3),
+        Icon(icon, color: color, size: 19),
+        const SizedBox(width: 5),
         Text(
           label,
-          style: const TextStyle(fontWeight: FontWeight.w600, fontSize: 14),
+          style: TextStyle(
+            fontWeight: FontWeight.w600,
+            fontSize: 15,
+            color: color,
+          ),
         ),
       ],
     );
@@ -485,24 +525,35 @@ class _LangSelector extends StatelessWidget {
       children: langs.map((l) {
         final isSelected = l == selected;
         return Padding(
-          padding: const EdgeInsets.only(right: 10),
+          padding: const EdgeInsets.only(right: 7),
           child: GestureDetector(
             onTap: () => onTap(l),
             child: Container(
-              padding: const EdgeInsets.symmetric(vertical: 6, horizontal: 15),
+              padding: const EdgeInsets.symmetric(vertical: 7, horizontal: 15),
               decoration: BoxDecoration(
                 color: isSelected
                     ? const Color(0xFFDA2C38)
                     : const Color(0xFFF8F7FA),
-                borderRadius: BorderRadius.circular(11),
+                borderRadius: BorderRadius.circular(10),
+                border: isSelected
+                    ? Border.all(color: const Color(0xFFDA2C38), width: 1.4)
+                    : null,
               ),
-              child: Text(
-                "${flagEmoji[l]} $l",
-                style: TextStyle(
-                  color: isSelected ? Colors.white : const Color(0xFFDA2C38),
-                  fontWeight: FontWeight.w700,
-                  fontSize: 14.5,
-                ),
+              child: Row(
+                children: [
+                  Text(flagEmoji[l]!, style: const TextStyle(fontSize: 18)),
+                  const SizedBox(width: 6),
+                  Text(
+                    l,
+                    style: TextStyle(
+                      color: isSelected
+                          ? Colors.white
+                          : const Color(0xFFDA2C38),
+                      fontWeight: FontWeight.w700,
+                      fontSize: 15,
+                    ),
+                  ),
+                ],
               ),
             ),
           ),
@@ -512,58 +563,71 @@ class _LangSelector extends StatelessWidget {
   }
 }
 
-class _ComoLlegarMap extends StatelessWidget {
-  final List<Map<String, String>> mapSites;
-  const _ComoLlegarMap({required this.mapSites});
+class _ComoLlegarMapCupertino extends StatelessWidget {
+  final List<Map<String, dynamic>> mapSites;
+  const _ComoLlegarMapCupertino({required this.mapSites});
   @override
   Widget build(BuildContext context) {
-    return Container(
-      padding: const EdgeInsets.fromLTRB(22, 24, 22, 18),
-      decoration: const BoxDecoration(
-        color: Color(0xFFF8F7FA),
-        borderRadius: BorderRadius.vertical(top: Radius.circular(24)),
-      ),
-      child: Column(
-        mainAxisSize: MainAxisSize.min,
-        children: [
-          const Text(
-            "Como llegar",
-            style: TextStyle(fontWeight: FontWeight.bold, fontSize: 22),
-          ),
-          const SizedBox(height: 2),
-          const Text(
-            "Descubre las maravillas de la cultura andina.",
-            style: TextStyle(color: Color(0xFF888888), fontSize: 14),
-          ),
-          const SizedBox(height: 17),
-          ClipRRect(
-            borderRadius: BorderRadius.circular(16),
-            child: Image.network(
-              "https://i.ibb.co/bbn3P1s/cusco-mapa-demo.png",
-              fit: BoxFit.cover,
-              height: 250,
-              width: double.infinity,
+    return CupertinoActionSheet(
+      title: const Text("Como llegar"),
+      message: SizedBox(
+        height: 310,
+        width: double.infinity,
+        child: Stack(
+          children: [
+            Positioned.fill(
+              child: ClipRRect(
+                borderRadius: BorderRadius.circular(16),
+                child: Image.asset("assets/map_cusco.png", fit: BoxFit.cover),
+              ),
             ),
-          ),
-          const SizedBox(height: 14),
-          Wrap(
-            spacing: 9,
-            children: mapSites
-                .map(
-                  (s) => Chip(
-                    avatar: const Icon(
-                      Icons.place_rounded,
-                      size: 17,
+            ...mapSites.map(
+              (s) => Positioned(
+                left:
+                    (s['dx'] as double) *
+                    (MediaQuery.of(context).size.width - 100),
+                top: (s['dy'] as double) * 250,
+                child: Column(
+                  children: [
+                    const Icon(
+                      CupertinoIcons.location_solid,
                       color: Color(0xFFDA2C38),
+                      size: 25,
                     ),
-                    label: Text(s['name'] ?? ''),
-                    backgroundColor: const Color(0xFFFCE7E9),
-                    labelStyle: const TextStyle(fontWeight: FontWeight.w600),
-                  ),
-                )
-                .toList(),
-          ),
-        ],
+                    Container(
+                      decoration: BoxDecoration(
+                        color: Colors.white.withAlpha(240),
+                        borderRadius: BorderRadius.circular(8),
+                        boxShadow: [
+                          BoxShadow(
+                            // ignore: deprecated_member_use
+                            color: Colors.black.withOpacity(0.12),
+                            blurRadius: 6,
+                          ),
+                        ],
+                      ),
+                      padding: const EdgeInsets.symmetric(
+                        horizontal: 10,
+                        vertical: 2,
+                      ),
+                      child: Text(
+                        s['name'],
+                        style: const TextStyle(
+                          fontWeight: FontWeight.w600,
+                          fontSize: 12.7,
+                        ),
+                      ),
+                    ),
+                  ],
+                ),
+              ),
+            ),
+          ],
+        ),
+      ),
+      cancelButton: CupertinoActionSheetAction(
+        onPressed: () => Navigator.pop(context),
+        child: const Text("Cerrar"),
       ),
     );
   }
