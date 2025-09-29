@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:connectivity_plus/connectivity_plus.dart';
 import '../widgets/navbar_temp.dart';
 
 import 'translation_screen.dart';
@@ -15,6 +14,7 @@ class HomeScreen extends StatefulWidget {
 }
 
 class _HomeScreenState extends State<HomeScreen> {
+  // Simula que siempre está conectado
   bool conectado = true;
 
   static const List<Map<String, dynamic>> paquetesLocales = [
@@ -28,27 +28,7 @@ class _HomeScreenState extends State<HomeScreen> {
   static const double progreso = 0.75;
   int _currentIndex = 0;
 
-  @override
-  void initState() {
-    super.initState();
-    _checkConnection();
-    Connectivity().onConnectivityChanged.listen((results) {
-      _updateConnection(results);
-    });
-  }
-
-  Future<void> _checkConnection() async {
-    final result = await Connectivity().checkConnectivity();
-    _updateConnection([result]);
-  }
-
-  void _updateConnection(List<ConnectivityResult> results) {
-    setState(() {
-      conectado =
-          results.contains(ConnectivityResult.mobile) ||
-          results.contains(ConnectivityResult.wifi);
-    });
-  }
+  final String nombreUsuario = "Fabricio Aylas"; // Usaremos esta variable
 
   void _onNavBarTap(int i) {
     setState(() => _currentIndex = i);
@@ -84,7 +64,6 @@ class _HomeScreenState extends State<HomeScreen> {
 
   @override
   Widget build(BuildContext context) {
-    const nombreUsuario = "Fabricio";
     return Scaffold(
       backgroundColor: const Color(0xFFE4E4E4),
       body: SafeArea(
@@ -100,10 +79,10 @@ class _HomeScreenState extends State<HomeScreen> {
                     Expanded(
                       child: _StatusButton(
                         icon: Icons.wifi,
-                        label: conectado ? "Conectado" : "Sin conexión",
-                        color: conectado ? Colors.green : Colors.red,
-                        iconColor: conectado ? Colors.green : Colors.red,
-                        borderColor: conectado ? Colors.green : Colors.red,
+                        label: "Conectado",
+                        color: Colors.green,
+                        iconColor: Colors.green,
+                        borderColor: Colors.green,
                         onTap: () {},
                       ),
                     ),
@@ -127,40 +106,46 @@ class _HomeScreenState extends State<HomeScreen> {
                 ),
               ),
               const SizedBox(height: 12),
-              const Text(
+              Text(
                 "Bienvenido de vuelta $nombreUsuario!",
-                style: TextStyle(
+                style: const TextStyle(
                   fontSize: 20,
                   fontWeight: FontWeight.w500,
                   letterSpacing: -0.5,
                 ),
               ),
               const SizedBox(height: 14),
-              const Padding(
-                padding: EdgeInsets.symmetric(horizontal: 20, vertical: 6),
+              Padding(
+                padding: const EdgeInsets.symmetric(
+                  horizontal: 20,
+                  vertical: 6,
+                ),
                 child: Card(
                   elevation: 0,
                   color: Colors.white,
-                  shape: RoundedRectangleBorder(
+                  shape: const RoundedRectangleBorder(
                     borderRadius: BorderRadius.all(Radius.circular(18)),
                   ),
                   child: Padding(
-                    padding: EdgeInsets.symmetric(vertical: 18, horizontal: 18),
+                    padding: const EdgeInsets.symmetric(
+                      vertical: 18,
+                      horizontal: 18,
+                    ),
                     child: Column(
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
-                        Text(
+                        const Text(
                           "Progreso de Logros",
                           style: TextStyle(
                             fontWeight: FontWeight.w600,
                             fontSize: 17,
                           ),
                         ),
-                        SizedBox(height: 12),
-                        ClipRRect(
+                        const SizedBox(height: 12),
+                        const ClipRRect(
                           borderRadius: BorderRadius.all(Radius.circular(6)),
                           child: LinearProgressIndicator(
-                            value: progreso,
+                            value: progreso, // Usando la variable
                             minHeight: 9,
                             backgroundColor: Color(0xFFD6D6D6),
                             valueColor: AlwaysStoppedAnimation<Color>(
@@ -168,11 +153,11 @@ class _HomeScreenState extends State<HomeScreen> {
                             ),
                           ),
                         ),
-                        SizedBox(height: 6),
+                        const SizedBox(height: 6),
                         Row(
                           mainAxisAlignment: MainAxisAlignment.spaceBetween,
                           children: [
-                            Text(
+                            const Text(
                               "¡Sigue explorando y aprendiendo!",
                               style: TextStyle(
                                 fontSize: 13,
@@ -180,8 +165,8 @@ class _HomeScreenState extends State<HomeScreen> {
                               ),
                             ),
                             Text(
-                              "75 %",
-                              style: TextStyle(
+                              "${(progreso * 100).toInt()} %",
+                              style: const TextStyle(
                                 fontWeight: FontWeight.bold,
                                 fontSize: 13,
                               ),
@@ -193,7 +178,6 @@ class _HomeScreenState extends State<HomeScreen> {
                   ),
                 ),
               ),
-              // ---- ESTA SECCIÓN YA NO ES CONST PORQUE TIENE FOR ----
               Padding(
                 padding: const EdgeInsets.symmetric(
                   horizontal: 20,
