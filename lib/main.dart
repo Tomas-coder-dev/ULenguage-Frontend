@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'screens/welcome_screen.dart'; // Importa tu pantalla de bienvenida
+import 'screens/welcome_screen.dart';
 
 void main() {
   runApp(const ULenguageApp());

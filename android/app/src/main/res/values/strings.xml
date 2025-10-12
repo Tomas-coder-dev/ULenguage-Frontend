@@ -1,2 +1,6 @@
-<string name="facebook_app_id">1124531376162650</string>
-<string name="facebook_client_token">839003707e3680de2e13862d92348bad</string>
+<resources>
+    <string name="app_name">ulenguage_app_n</string>
+    <string name="facebook_app_id">1124531376162650</string>
+    <string name="facebook_client_token">839003707e3680de2e13862d92348bad</string>
+    <!-- Agrega aquí cualquier string adicional que necesites -->
+</resources>
