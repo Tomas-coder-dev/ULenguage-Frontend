@@ -1,6 +1,24 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:image_picker/image_picker.dart';
+import 'package:http/http.dart' as http;
+import 'dart:convert';
 import '../widgets/navbar_temp.dart';
+
+class OcrObject {
+  final String name;
+  final double score;
+  final List boundingBox;
+  final String explanation;
+  final String translation;
+  OcrObject({
+    required this.name,
+    required this.score,
+    required this.boundingBox,
+    required this.explanation,
+    required this.translation,
+  });
+}
 
 class OcrScreen extends StatefulWidget {
   const OcrScreen({super.key});
@@ -13,15 +31,90 @@ class _OcrScreenState extends State<OcrScreen> {
   bool scanned = false;
   int _currentIndex = 2;
 
-  void _simulateScan() async {
+  List<OcrObject> detectedObjects = [];
+  OcrObject? selectedObject;
+  String errorMsg = '';
+
+  Future<void> _pickAndScanImage() async {
+    final picker = ImagePicker();
+    final pickedFile = await picker.pickImage(source: ImageSource.gallery);
+
+    if (pickedFile == null) return;
+
     setState(() {
       scanning = true;
       scanned = false;
+      detectedObjects = [];
+      selectedObject = null;
+      errorMsg = '';
     });
-    await Future.delayed(const Duration(seconds: 2));
+
+    try {
+      final uri = Uri.parse(
+        'http://192.168.100.7:5000/api/analyze-and-explain',
+      ); // Cambia si tu endpoint es diferente
+      final request = http.MultipartRequest('POST', uri);
+      request.files.add(
+        await http.MultipartFile.fromPath('image', pickedFile.path),
+      );
+      // Si tu backend espera targetLang, envíalo
+      request.fields['targetLang'] = 'es';
+
+      final response = await request.send();
+      final respStr = await response.stream.bytesToString();
+
+      if (response.statusCode == 200) {
+        final data = json.decode(respStr);
+
+        // Arma la lista de objetos a mostrar (uno por objeto detectado)
+        detectedObjects = [];
+        final objects = data['objects'] ?? [];
+        final explanations = data['explanations'] ?? [];
+        final translations = data['translations'] ?? [];
+
+        for (int i = 0; i < objects.length; i++) {
+          detectedObjects.add(
+            OcrObject(
+              name: objects[i]['name'] ?? '',
+              score: objects[i]['score']?.toDouble() ?? 0.0,
+              boundingBox: objects[i]['boundingBox'] ?? [],
+              explanation: explanations.length > i ? explanations[i] : '',
+              translation: translations.length > i ? translations[i] : '',
+            ),
+          );
+        }
+        setState(() {
+          scanning = false;
+          scanned = true;
+          errorMsg = detectedObjects.isEmpty ? 'No se detectaron objetos.' : '';
+        });
+      } else {
+        setState(() {
+          scanning = false;
+          errorMsg = 'Error de escaneo OCR';
+        });
+      }
+    } catch (e) {
+      setState(() {
+        scanning = false;
+        errorMsg = 'Error de conexión';
+      });
+    }
+  }
+
+  void _selectObject(OcrObject obj) {
+    setState(() {
+      selectedObject = obj;
+    });
+  }
+
+  void _resetScan() {
     setState(() {
       scanning = false;
-      scanned = true;
+      scanned = false;
+      detectedObjects = [];
+      selectedObject = null;
+      errorMsg = '';
     });
   }
 
@@ -49,7 +142,7 @@ class _OcrScreenState extends State<OcrScreen> {
                   horizontal: 18,
                   vertical: 20,
                 ),
-                child: !scanned
+                child: (!scanned)
                     ? Column(
                         mainAxisAlignment: MainAxisAlignment.center,
                         children: [
@@ -62,7 +155,7 @@ class _OcrScreenState extends State<OcrScreen> {
                           Text(
                             scanning
                                 ? "Escaneando..."
-                                : "Apunta la cámara a un objeto cultural para escanearlo.",
+                                : "Selecciona una imagen para analizar y detectar objetos culturales.",
                             style: const TextStyle(
                               fontSize: 18,
                               color: Color(0xFF363636),
@@ -77,7 +170,7 @@ class _OcrScreenState extends State<OcrScreen> {
                               vertical: 15,
                             ),
                             borderRadius: BorderRadius.circular(15),
-                            onPressed: scanning ? null : _simulateScan,
+                            onPressed: scanning ? null : _pickAndScanImage,
                             child: Row(
                               mainAxisSize: MainAxisSize.min,
                               children: [
@@ -90,7 +183,9 @@ class _OcrScreenState extends State<OcrScreen> {
                                 ),
                                 const SizedBox(width: 9),
                                 Text(
-                                  scanning ? "Escaneando..." : "Escanear",
+                                  scanning
+                                      ? "Escaneando..."
+                                      : "Escanear Imagen",
                                   style: const TextStyle(
                                     fontSize: 17,
                                     fontWeight: FontWeight.w600,
@@ -100,23 +195,122 @@ class _OcrScreenState extends State<OcrScreen> {
                               ],
                             ),
                           ),
-                          if (scanning) ...[
-                            const SizedBox(height: 25),
+                          if (scanning) const SizedBox(height: 25),
+                          if (scanning)
                             const CupertinoActivityIndicator(
                               radius: 17,
                               color: Color(0xFFDA2C38),
                             ),
+                          if (errorMsg.isNotEmpty) ...[
+                            const SizedBox(height: 18),
+                            Text(
+                              errorMsg,
+                              style: const TextStyle(
+                                color: Colors.red,
+                                fontWeight: FontWeight.bold,
+                                fontSize: 16,
+                              ),
+                              textAlign: TextAlign.center,
+                            ),
                           ],
                         ],
                       )
-                    : ListView(
-                        shrinkWrap: true,
+                    : selectedObject == null
+                    ? Column(
                         children: [
                           const SizedBox(height: 18),
                           const Center(
                             child: Text(
-                              "Resultado de Escaneo",
+                              "Objetos Detectados",
                               style: TextStyle(
+                                fontWeight: FontWeight.bold,
+                                fontSize: 22,
+                                color: Color(0xFF222222),
+                                letterSpacing: -0.5,
+                              ),
+                            ),
+                          ),
+                          const SizedBox(height: 10),
+                          if (errorMsg.isNotEmpty)
+                            Text(
+                              errorMsg,
+                              style: const TextStyle(
+                                color: Colors.red,
+                                fontWeight: FontWeight.bold,
+                                fontSize: 15,
+                              ),
+                            ),
+                          ...detectedObjects.map(
+                            (obj) => Padding(
+                              padding: const EdgeInsets.only(bottom: 12),
+                              child: CupertinoButton(
+                                borderRadius: BorderRadius.circular(18),
+                                color: const Color(0xFFFCE7E9),
+                                onPressed: () => _selectObject(obj),
+                                child: Row(
+                                  children: [
+                                    Icon(
+                                      CupertinoIcons.doc_text,
+                                      color: Color(0xFFDA2C38),
+                                      size: 24,
+                                    ),
+                                    const SizedBox(width: 14),
+                                    Expanded(
+                                      child: Text(
+                                        obj.name,
+                                        style: const TextStyle(
+                                          fontSize: 17,
+                                          fontWeight: FontWeight.w600,
+                                          color: Color(0xFFDA2C38),
+                                        ),
+                                      ),
+                                    ),
+                                    const Icon(
+                                      CupertinoIcons.right_chevron,
+                                      color: Color(0xFFDA2C38),
+                                      size: 22,
+                                    ),
+                                  ],
+                                ),
+                              ),
+                            ),
+                          ),
+                          const SizedBox(height: 22),
+                          CupertinoButton(
+                            borderRadius: BorderRadius.circular(18),
+                            color: const Color(0xFFDA2C38),
+                            onPressed: _resetScan,
+                            child: const Row(
+                              mainAxisSize: MainAxisSize.min,
+                              children: [
+                                Icon(
+                                  CupertinoIcons.camera,
+                                  color: Colors.white,
+                                  size: 20,
+                                ),
+                                SizedBox(width: 9),
+                                Text(
+                                  "Nuevo Escaneo",
+                                  style: TextStyle(
+                                    fontSize: 16,
+                                    fontWeight: FontWeight.w600,
+                                    color: Colors.white,
+                                  ),
+                                ),
+                              ],
+                            ),
+                          ),
+                        ],
+                      )
+                    : ListView(
+                        shrinkWrap: true,
+                        physics: const NeverScrollableScrollPhysics(),
+                        children: [
+                          const SizedBox(height: 18),
+                          Center(
+                            child: Text(
+                              selectedObject!.name,
+                              style: const TextStyle(
                                 fontWeight: FontWeight.bold,
                                 fontSize: 26,
                                 color: Color(0xFF222222),
@@ -125,10 +319,10 @@ class _OcrScreenState extends State<OcrScreen> {
                             ),
                           ),
                           const SizedBox(height: 6),
-                          const Center(
+                          Center(
                             child: Text(
                               "Análisis Cultural",
-                              style: TextStyle(
+                              style: const TextStyle(
                                 fontWeight: FontWeight.w500,
                                 fontSize: 17,
                                 color: Color(0xFF888888),
@@ -137,8 +331,8 @@ class _OcrScreenState extends State<OcrScreen> {
                             ),
                           ),
                           const SizedBox(height: 24),
-                          const _CupertinoCard(
-                            padding: EdgeInsets.symmetric(
+                          _CupertinoCard(
+                            padding: const EdgeInsets.symmetric(
                               vertical: 19,
                               horizontal: 19,
                             ),
@@ -149,44 +343,37 @@ class _OcrScreenState extends State<OcrScreen> {
                                   icon: CupertinoIcons.textformat_alt,
                                   title: "Identificación",
                                   color: Color(0xFFDA2C38),
-                                  content:
-                                      "Runa Inka - Escultura ceremonial andina",
+                                  content: selectedObject!.name,
                                 ),
-                                SizedBox(height: 18),
+                                const SizedBox(height: 18),
                                 _OcrResultSection(
                                   icon: CupertinoIcons.book,
-                                  title: "Contexto Cultural",
+                                  title: "Explicación Cultural",
                                   color: Color(0xFFDA2C38),
-                                  content:
-                                      "Esta escultura representa a un líder Inka, figura central en la cosmovisión andina. Elementos como el kero (vaso ceremonial) y el bastón simbolizan poder, sabiduría y conexión con los dioses.",
+                                  content: selectedObject!.explanation,
                                 ),
-                                SizedBox(height: 18),
+                                const SizedBox(height: 18),
                                 _OcrResultSection(
                                   icon: CupertinoIcons.globe,
-                                  title: "Traducciones",
+                                  title: "Traducción",
                                   color: Color(0xFFDA2C38),
-                                  content:
-                                      "Cultural object identified: Inka Ruler Statue",
+                                  content: selectedObject!.translation,
                                 ),
                               ],
                             ),
                           ),
                           const SizedBox(height: 25),
-                          // Imagen resultado: sin fondo amarillo, full width, proporción 5:3
-                          Center(
-                            child: ClipRRect(
-                              borderRadius: const BorderRadius.all(
-                                Radius.circular(22),
-                              ),
-                              child: AspectRatio(
-                                aspectRatio: 5 / 3,
-                                child: Image.asset(
-                                  "assets/inka.png",
-                                  fit: BoxFit.cover,
+                          if (selectedObject!.boundingBox.isNotEmpty)
+                            Center(
+                              child: Text(
+                                "Bounding Box: ${selectedObject!.boundingBox.map((v) => '(${v['x']}, ${v['y']})').join(', ')}",
+                                style: const TextStyle(
+                                  color: Color(0xFFDA2C38),
+                                  fontWeight: FontWeight.w500,
+                                  fontSize: 14,
                                 ),
                               ),
                             ),
-                          ),
                           const SizedBox(height: 28),
                           Center(
                             child: CupertinoButton.filled(
@@ -194,8 +381,7 @@ class _OcrScreenState extends State<OcrScreen> {
                                 Radius.circular(15),
                               ),
                               onPressed: () => setState(() {
-                                scanned = false;
-                                scanning = false;
+                                selectedObject = null;
                               }),
                               padding: const EdgeInsets.symmetric(
                                 vertical: 15,
@@ -205,13 +391,13 @@ class _OcrScreenState extends State<OcrScreen> {
                                 mainAxisSize: MainAxisSize.min,
                                 children: [
                                   Icon(
-                                    CupertinoIcons.camera,
+                                    CupertinoIcons.chevron_left,
                                     color: Colors.white,
                                     size: 20,
                                   ),
                                   SizedBox(width: 9),
                                   Text(
-                                    "Nuevo Escaneo",
+                                    "Volver",
                                     style: TextStyle(
                                       fontSize: 16,
                                       fontWeight: FontWeight.w600,
