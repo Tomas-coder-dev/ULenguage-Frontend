@@ -1,0 +1,45 @@
+name: ulenguage_app_n
+description: "A new Flutter project."
+publish_to: 'none'
+
+version: 1.0.0+1
+
+environment:
+  sdk: ^3.8.1
+
+dependencies:
+  flutter:
+    sdk: flutter
+  cupertino_icons: ^1.0.8
+  http: ^1.5.0
+  provider: ^6.1.5+1
+  google_sign_in: ^7.2.0  # Actualizado a versión compatible con Firebase Auth
+  flutter_facebook_auth: ^7.1.0      # Versión compatible con firebase_auth 5.x
+  sign_in_with_apple: ^7.0.1
+  connectivity_plus: ^7.0.0
+  firebase_auth: ^6.1.0              # Actualizado a versión compatible
+
+dev_dependencies:
+  flutter_test:
+    sdk: flutter
+  flutter_lints: ^6.0.0
+
+flutter:
+  uses-material-design: true
+
+  assets:
+    - assets/google_icon.png
+    - assets/facebook_icon.png
+    - assets/apple_icon.png
+    - assets/inka.png
+    - assets/ocr_imaynallam.png
+    - assets/ocr_salesmanager.jpeg
+    - assets/Machu_Picchu.jpg
+    - assets/centro_historico.jpg
+    - assets/Ollantaytambo.jpg
+    - assets/map_cusco.png
+
+  fonts:
+    - family: SFProDisplay
+      fonts:
+        - asset: fonts/SFPRODISPLAYREGULAR.OTF
