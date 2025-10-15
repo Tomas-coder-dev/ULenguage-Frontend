@@ -1,8 +1,17 @@
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
+import 'providers/user_provider.dart';
 import 'screens/welcome_screen.dart';
 
 void main() {
-  runApp(const ULenguageApp());
+  runApp(
+    MultiProvider(
+      providers: [
+        ChangeNotifierProvider(create: (_) => UserProvider()),
+      ],
+      child: const ULenguageApp(),
+    ),
+  );
 }
 
 class ULenguageApp extends StatelessWidget {

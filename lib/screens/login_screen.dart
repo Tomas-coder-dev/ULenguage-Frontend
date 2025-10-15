@@ -1,5 +1,8 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
+import '../services/auth_service.dart';
+import '../providers/user_provider.dart';
 import 'home_screen.dart'; // Ajusta la ruta si es necesario
 
 class LoginScreen extends StatefulWidget {
@@ -11,6 +14,64 @@ class LoginScreen extends StatefulWidget {
 
 class _LoginScreenState extends State<LoginScreen> {
   bool loading = false;
+  final AuthService _authService = AuthService();
+
+  Future<void> _handleGoogleSignIn() async {
+    setState(() => loading = true);
+    
+    try {
+      final result = await _authService.signInWithGoogle();
+      
+      if (!mounted) return;
+      
+      if (result['success']) {
+        // Guardar usuario en el Provider
+        final userProvider = Provider.of<UserProvider>(context, listen: false);
+        userProvider.setUser(result['user']);
+        
+        // Login exitoso, navegar a home
+        Navigator.pushReplacement(
+          context,
+          CupertinoPageRoute(builder: (context) => const HomeScreen()),
+        );
+        
+        // Mostrar mensaje de bienvenida
+        ScaffoldMessenger.of(context).showSnackBar(
+          SnackBar(
+            content: Text('¡Bienvenido ${result['user']['name']}!'),
+            backgroundColor: Colors.green,
+            duration: const Duration(seconds: 2),
+          ),
+        );
+      } else {
+        // Mostrar error
+        _showErrorDialog(result['error'] ?? 'Error desconocido');
+      }
+    } catch (e) {
+      if (!mounted) return;
+      _showErrorDialog(e.toString());
+    } finally {
+      if (mounted) {
+        setState(() => loading = false);
+      }
+    }
+  }
+
+  void _showErrorDialog(String message) {
+    showCupertinoDialog(
+      context: context,
+      builder: (context) => CupertinoAlertDialog(
+        title: const Text('Error de autenticación'),
+        content: Text(message),
+        actions: [
+          CupertinoDialogAction(
+            child: const Text('OK'),
+            onPressed: () => Navigator.pop(context),
+          ),
+        ],
+      ),
+    );
+  }
 
   Future<void> _fakeLogin() async {
     setState(() => loading = true);
@@ -118,7 +179,7 @@ class _LoginScreenState extends State<LoginScreen> {
                           color: Colors.white,
                           borderRadius: BorderRadius.circular(18),
                           padding: const EdgeInsets.symmetric(vertical: 14),
-                          onPressed: loading ? null : _fakeLogin,
+                          onPressed: loading ? null : _handleGoogleSignIn,
                           child: Row(
                             mainAxisAlignment: MainAxisAlignment.center,
                             children: [
