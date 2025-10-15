@@ -5,16 +5,12 @@ import 'package:flutter/foundation.dart';
 import '../config/app_config.dart';
 
 class AuthService {
-  // Configura Google Sign-In con serverClientId para obtener idToken
+  // Configura Google Sign-In para Android
   final GoogleSignIn _googleSignIn = GoogleSignIn(
-    scopes: [
+    scopes: <String>[
       'email',
-      'profile',
+      'https://www.googleapis.com/auth/userinfo.profile',
     ],
-    // Para Web: necesitas configurar el clientId aquí
-    clientId: kIsWeb ? AppConfig.googleClientId : null,
-    // En Android necesitas configurar el serverClientId en google-services.json
-    // En iOS se configura en el Info.plist
   );
 
   /// Inicia sesión con Google y envía el token al backend
@@ -86,11 +82,12 @@ class AuthService {
 
   /// Verifica si hay una sesión activa de Google
   Future<bool> isSignedIn() async {
-    return await _googleSignIn.isSignedIn();
+    return _googleSignIn.isSignedIn();
   }
 
   /// Obtiene el usuario actual de Google
-  Future<GoogleSignInAccount?> getCurrentUser() async {
+  GoogleSignInAccount? getCurrentUser() {
     return _googleSignIn.currentUser;
   }
 }
+

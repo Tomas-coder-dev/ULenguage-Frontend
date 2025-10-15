@@ -14,7 +14,7 @@ dependencies:
   http: ^1.5.0
   image_picker: ^1.0.4
   provider: ^6.1.5+1
-  google_sign_in: ^7.2.0  # Actualizado a versión compatible con Firebase Auth
+  google_sign_in: ^6.2.1  # Versión estable compatible
   flutter_facebook_auth: ^7.1.0      # Versión compatible con firebase_auth 5.x
   sign_in_with_apple: ^7.0.1
   connectivity_plus: ^7.0.0
