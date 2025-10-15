@@ -1,0 +1,29 @@
+{
+  "project_info": {
+    "project_number": "888679467711",
+    "project_id": "ulenguage-app",
+    "storage_bucket": "ulenguage-app.firebasestorage.app"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:888679467711:android:ddb12c8aba9828643c940a",
+        "android_client_info": {
+          "package_name": "com.example.ulenguage_app_n"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyC45p-st-KIZG-WKB0KW6Jz546kj1wltbM"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
