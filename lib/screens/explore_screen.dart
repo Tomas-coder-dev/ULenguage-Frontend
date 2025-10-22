@@ -1,5 +1,6 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 import '../widgets/navbar_temp.dart';
 
 class ExploreScreen extends StatefulWidget {
@@ -79,14 +80,15 @@ class _ExploreScreenState extends State<ExploreScreen> {
   @override
   Widget build(BuildContext context) {
     const bg = Color(0xFFF8F7FA);
+    final l10n = AppLocalizations.of(context)!;
     return CupertinoPageScaffold(
       backgroundColor: bg,
-      navigationBar: const CupertinoNavigationBar(
+      navigationBar: CupertinoNavigationBar(
         middle: Text(
-          "Explorar",
-          style: TextStyle(color: Colors.white, fontWeight: FontWeight.bold),
+          l10n.explore,
+          style: const TextStyle(color: Colors.white, fontWeight: FontWeight.bold),
         ),
-        backgroundColor: Color(0xFFDA2C38),
+        backgroundColor: const Color(0xFFDA2C38),
         border: null,
       ),
       child: Stack(
@@ -106,6 +108,7 @@ class _ExploreScreenState extends State<ExploreScreen> {
                           selectedSite = idx;
                           selectedLang = 'Español';
                         }),
+                        l10n: l10n,
                       )
                     : _SiteDetailSection(
                         site: sites[selectedSite!],
@@ -114,9 +117,10 @@ class _ExploreScreenState extends State<ExploreScreen> {
                         onComoLlegar: () => showCupertinoModalPopup(
                           context: context,
                           builder: (_) =>
-                              _ComoLlegarMapCupertino(mapSites: mapSites),
+                              _ComoLlegarMapCupertino(mapSites: mapSites, l10n: l10n),
                         ),
                         onBack: () => setState(() => selectedSite = null),
+                        l10n: l10n,
                       ),
               ),
             ),
@@ -137,7 +141,8 @@ class _ExploreScreenState extends State<ExploreScreen> {
 class _OverviewSection extends StatelessWidget {
   final List<Map<String, dynamic>> sites;
   final void Function(int) onTap;
-  const _OverviewSection({required this.sites, required this.onTap});
+  final AppLocalizations l10n;
+  const _OverviewSection({required this.sites, required this.onTap, required this.l10n});
   @override
   Widget build(BuildContext context) {
     return Container(
@@ -157,22 +162,22 @@ class _OverviewSection extends StatelessWidget {
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            const Text(
-              "Explorar",
-              style: TextStyle(
+            Text(
+              l10n.explore,
+              style: const TextStyle(
                 fontWeight: FontWeight.bold,
                 fontSize: 24,
                 color: Color(0xFF1B1B1B),
               ),
             ),
             const SizedBox(height: 2),
-            const Text(
-              "Descubre las maravillas de la cultura andina.",
-              style: TextStyle(color: Color(0xFF787878), fontSize: 15.5),
+            Text(
+              l10n.discoverAndean,
+              style: const TextStyle(color: Color(0xFF787878), fontSize: 15.5),
             ),
             const SizedBox(height: 18),
             CupertinoTextField(
-              placeholder: "Buscar sitios o rutas...",
+              placeholder: l10n.searchSites,
               prefix: const Padding(
                 padding: EdgeInsets.only(left: 8, right: 7),
                 child: Icon(CupertinoIcons.search, color: Color(0xFFDA2C38)),
@@ -186,9 +191,9 @@ class _OverviewSection extends StatelessWidget {
               style: const TextStyle(fontSize: 16),
             ),
             const SizedBox(height: 25),
-            const Text(
-              "Sitios Populares",
-              style: TextStyle(
+            Text(
+              l10n.popularSites,
+              style: const TextStyle(
                 fontWeight: FontWeight.w600,
                 fontSize: 17.5,
                 color: Color(0xFFDA2C38),
@@ -198,6 +203,14 @@ class _OverviewSection extends StatelessWidget {
             ...sites.asMap().entries.map((entry) {
               final idx = entry.key;
               final site = entry.value;
+              String type = site['type'];
+              if (type == 'Montaña') type = l10n.mountain;
+              else if (type == 'Ciudad') type = l10n.city;
+              else if (type == 'Ruta Cultural') type = l10n.culturalRoute;
+              String difficulty = site['difficulty'];
+              if (difficulty == 'Fácil') difficulty = l10n.easy;
+              else if (difficulty == 'Media') difficulty = l10n.medium;
+              else if (difficulty == 'Difícil') difficulty = l10n.hard;
               return CupertinoButton(
                 padding: EdgeInsets.zero,
                 borderRadius: BorderRadius.circular(18),
@@ -249,7 +262,7 @@ class _OverviewSection extends StatelessWidget {
                               ),
                               const SizedBox(height: 2),
                               Text(
-                                site['type'],
+                                type,
                                 style: const TextStyle(
                                   fontWeight: FontWeight.w500,
                                   fontSize: 12.4,
@@ -260,10 +273,10 @@ class _OverviewSection extends StatelessWidget {
                               Row(
                                 children: [
                                   _Badge(
-                                    text: site['difficulty'],
-                                    color: site['difficulty'] == 'Fácil'
+                                    text: difficulty,
+                                    color: difficulty == l10n.easy
                                         ? const Color(0xFF47B881)
-                                        : site['difficulty'] == 'Media'
+                                        : difficulty == l10n.medium
                                         ? const Color(0xFF8E5DD1)
                                         : const Color(0xFFD34D4D),
                                   ),
@@ -304,16 +317,26 @@ class _SiteDetailSection extends StatelessWidget {
   final void Function(String) onLangTap;
   final VoidCallback onComoLlegar;
   final VoidCallback onBack;
+  final AppLocalizations l10n;
   const _SiteDetailSection({
     required this.site,
     required this.selectedLang,
     required this.onLangTap,
     required this.onComoLlegar,
     required this.onBack,
+    required this.l10n,
   });
 
   @override
   Widget build(BuildContext context) {
+    String type = site['type'];
+    if (type == 'Montaña') type = l10n.mountain;
+    else if (type == 'Ciudad') type = l10n.city;
+    else if (type == 'Ruta Cultural') type = l10n.culturalRoute;
+    String difficulty = site['difficulty'];
+    if (difficulty == 'Fácil') difficulty = l10n.easy;
+    else if (difficulty == 'Media') difficulty = l10n.medium;
+    else if (difficulty == 'Difícil') difficulty = l10n.hard;
     return Container(
       decoration: BoxDecoration(
         color: Colors.white,
@@ -357,16 +380,16 @@ class _SiteDetailSection extends StatelessWidget {
               children: [
                 _SiteDetailIconText(
                   icon: CupertinoIcons.location_solid,
-                  label: site['type'],
+                  label: type,
                   color: const Color(0xFFDA2C38),
                 ),
                 const SizedBox(width: 16),
                 _SiteDetailIconText(
                   icon: CupertinoIcons.chart_bar_alt_fill,
-                  label: site['difficulty'],
-                  color: site['difficulty'] == 'Fácil'
+                  label: difficulty,
+                  color: difficulty == l10n.easy
                       ? const Color(0xFF47B881)
-                      : site['difficulty'] == 'Media'
+                      : difficulty == l10n.medium
                       ? const Color(0xFF8E5DD1)
                       : const Color(0xFFD34D4D),
                 ),
@@ -392,7 +415,7 @@ class _SiteDetailSection extends StatelessWidget {
                     ),
                     const SizedBox(width: 6),
                     Text(
-                      "Descripción Cultural",
+                      l10n.culturalDescription,
                       style: TextStyle(
                         fontWeight: FontWeight.bold,
                         fontSize: 16,
@@ -434,9 +457,9 @@ class _SiteDetailSection extends StatelessWidget {
                 borderRadius: BorderRadius.circular(16),
                 padding: const EdgeInsets.symmetric(vertical: 13),
                 onPressed: onComoLlegar,
-                child: const Text(
-                  "Como llegar",
-                  style: TextStyle(
+                child: Text(
+                  l10n.howToGet,
+                  style: const TextStyle(
                     fontSize: 16.5,
                     fontWeight: FontWeight.bold,
                     letterSpacing: 0.09,
@@ -565,11 +588,12 @@ class _LangSelector extends StatelessWidget {
 
 class _ComoLlegarMapCupertino extends StatelessWidget {
   final List<Map<String, dynamic>> mapSites;
-  const _ComoLlegarMapCupertino({required this.mapSites});
+  final AppLocalizations l10n;
+  const _ComoLlegarMapCupertino({required this.mapSites, required this.l10n});
   @override
   Widget build(BuildContext context) {
     return CupertinoActionSheet(
-      title: const Text("Como llegar"),
+      title: Text(l10n.howToGet),
       message: SizedBox(
         height: 310,
         width: double.infinity,
@@ -600,7 +624,6 @@ class _ComoLlegarMapCupertino extends StatelessWidget {
                         borderRadius: BorderRadius.circular(8),
                         boxShadow: [
                           BoxShadow(
-                            // ignore: deprecated_member_use
                             color: Colors.black.withOpacity(0.12),
                             blurRadius: 6,
                           ),
@@ -627,7 +650,7 @@ class _ComoLlegarMapCupertino extends StatelessWidget {
       ),
       cancelButton: CupertinoActionSheetAction(
         onPressed: () => Navigator.pop(context),
-        child: const Text("Cerrar"),
+        child: Text(l10n.close),
       ),
     );
   }

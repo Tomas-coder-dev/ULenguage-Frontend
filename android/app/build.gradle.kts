@@ -6,6 +6,10 @@ plugins {
     id("com.google.gms.google-services")
 }
 
+dependencies {
+    implementation(platform("com.google.firebase:firebase-bom:34.4.0"))
+}
+
 android {
     namespace = "com.example.ulenguage_app_n"
     compileSdk = flutter.compileSdkVersion

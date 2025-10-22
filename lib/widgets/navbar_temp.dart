@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 
 class Navbar extends StatelessWidget {
   final int currentIndex;
@@ -8,6 +9,7 @@ class Navbar extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final l10n = AppLocalizations.of(context)!;
     return Container(
       height: 72,
       decoration: const BoxDecoration(
@@ -29,26 +31,26 @@ class Navbar extends StatelessWidget {
         children: [
           _NavBarIcon(
             icon: Icons.home_outlined,
-            label: "Inicio",
+            label: l10n.navbarHome,
             selected: currentIndex == 0,
             onTap: () => onTap(0),
           ),
           _NavBarIcon(
             icon: Icons.translate_rounded,
-            label: "Traducción",
+            label: l10n.navbarTranslate,
             selected: currentIndex == 1,
             onTap: () => onTap(1),
           ),
           _CameraNavBarIcon(selected: currentIndex == 2, onTap: () => onTap(2)),
           _NavBarIcon(
             icon: Icons.explore_outlined,
-            label: "Explorar",
+            label: l10n.navbarExplore,
             selected: currentIndex == 3,
             onTap: () => onTap(3),
           ),
           _NavBarIcon(
             icon: Icons.person_outline,
-            label: "Perfil",
+            label: l10n.navbarProfile,
             selected: currentIndex == 4,
             onTap: () => onTap(4),
           ),

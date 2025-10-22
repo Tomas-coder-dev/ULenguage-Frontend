@@ -1,9 +1,10 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
+import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 import '../services/auth_service.dart';
 import '../providers/user_provider.dart';
-import 'home_screen.dart'; // Ajusta la ruta si es necesario
+import 'home_screen.dart';
 
 class LoginScreen extends StatefulWidget {
   const LoginScreen({super.key});
@@ -58,14 +59,15 @@ class _LoginScreenState extends State<LoginScreen> {
   }
 
   void _showErrorDialog(String message) {
+    final l10n = AppLocalizations.of(context)!;
     showCupertinoDialog(
       context: context,
       builder: (context) => CupertinoAlertDialog(
-        title: const Text('Error de autenticación'),
+        title: Text(l10n.authErrorTitle),
         content: Text(message),
         actions: [
           CupertinoDialogAction(
-            child: const Text('OK'),
+            child: Text(l10n.ok),
             onPressed: () => Navigator.pop(context),
           ),
         ],
@@ -85,6 +87,7 @@ class _LoginScreenState extends State<LoginScreen> {
 
   @override
   Widget build(BuildContext context) {
+    final l10n = AppLocalizations.of(context)!;
     return Scaffold(
       backgroundColor: const Color(0xFFF7F4FA),
       body: SafeArea(
@@ -99,7 +102,7 @@ class _LoginScreenState extends State<LoginScreen> {
                   mainAxisAlignment: MainAxisAlignment.center,
                   children: [
                     Text(
-                      "ULenguage",
+                      l10n.appName,
                       style: TextStyle(
                         color: Colors.red[800],
                         fontWeight: FontWeight.bold,
@@ -143,22 +146,22 @@ class _LoginScreenState extends State<LoginScreen> {
                         ),
                       ),
                       const SizedBox(height: 18),
-                      const Align(
+                      Align(
                         alignment: Alignment.centerLeft,
                         child: Text(
-                          "Bienvenido de nuevo",
-                          style: TextStyle(
+                          l10n.welcome,
+                          style: const TextStyle(
                             fontSize: 14,
                             color: Color(0xFF757575),
                             fontFamily: 'SFProDisplay',
                           ),
                         ),
                       ),
-                      const Align(
+                      Align(
                         alignment: Alignment.centerLeft,
                         child: Text(
-                          "Iniciar sesión",
-                          style: TextStyle(
+                          l10n.login,
+                          style: const TextStyle(
                             fontSize: 22,
                             color: Colors.black,
                             fontWeight: FontWeight.bold,
@@ -185,9 +188,9 @@ class _LoginScreenState extends State<LoginScreen> {
                             children: [
                               Image.asset('assets/google_icon.png', height: 22),
                               const SizedBox(width: 10),
-                              const Text(
-                                'Continuar con Google',
-                                style: TextStyle(
+                              Text(
+                                l10n.continueWithGoogle,
+                                style: const TextStyle(
                                   color: Colors.black87,
                                   fontWeight: FontWeight.w600,
                                   fontFamily: 'SFProDisplay',
@@ -215,9 +218,9 @@ class _LoginScreenState extends State<LoginScreen> {
                                 height: 22,
                               ),
                               const SizedBox(width: 10),
-                              const Text(
-                                'Continuar con Facebook',
-                                style: TextStyle(
+                              Text(
+                                l10n.continueWithFacebook,
+                                style: const TextStyle(
                                   color: Colors.white,
                                   fontWeight: FontWeight.w600,
                                   fontFamily: 'SFProDisplay',

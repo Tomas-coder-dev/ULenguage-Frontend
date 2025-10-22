@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 import 'login_screen.dart';
 
 class WelcomeScreen extends StatelessWidget {
@@ -7,6 +8,7 @@ class WelcomeScreen extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final theme = Theme.of(context);
+    final l10n = AppLocalizations.of(context)!;
 
     return Scaffold(
       backgroundColor: const Color(0xFFF6F4FA),
@@ -26,7 +28,7 @@ class WelcomeScreen extends StatelessWidget {
                     ),
                     const SizedBox(height: 16),
                     Text(
-                      "ULenguage",
+                      l10n.appName,
                       style: TextStyle(
                         fontFamily: 'SFProDisplay',
                         color: Colors.red[800],
@@ -54,7 +56,7 @@ class WelcomeScreen extends StatelessWidget {
                     child: Column(
                       children: [
                         Text(
-                          "Bienvenido",
+                          l10n.welcome,
                           style: theme.textTheme.titleLarge?.copyWith(
                             color: Colors.grey[800],
                             fontWeight: FontWeight.w600,
@@ -63,7 +65,7 @@ class WelcomeScreen extends StatelessWidget {
                         ),
                         const SizedBox(height: 12),
                         Text(
-                          "Aprende, traduce y conecta\ncon el mundo andino.",
+                          l10n.welcomeSubtitle,
                           textAlign: TextAlign.center,
                           style: theme.textTheme.titleMedium?.copyWith(
                             color: Colors.grey[700],
@@ -76,9 +78,9 @@ class WelcomeScreen extends StatelessWidget {
                           width: double.infinity,
                           child: ElevatedButton.icon(
                             icon: const Icon(Icons.travel_explore, size: 24),
-                            label: const Text(
-                              '¡Inicia tu aventura!',
-                              style: TextStyle(
+                            label: Text(
+                              l10n.startAdventure,
+                              style: const TextStyle(
                                 fontFamily: 'SFProDisplay',
                                 fontWeight: FontWeight.w700,
                                 fontSize: 20,

@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 import '../widgets/navbar_temp.dart';
 import 'translation_screen.dart';
 import 'ocr_screen.dart';
@@ -18,14 +19,21 @@ class _HomeScreenState extends State<HomeScreen> {
 
   static const double progreso = 0.75;
 
-  static const List<Map<String, dynamic>> paquetesLocales = [
-    {
-      "nombre": "Paquete de idioma Quechua",
-      "tamano": "15 MB",
-      "instalado": true,
-    },
-    {"nombre": "Guía de Cuzco", "tamano": "32 MB", "instalado": false},
-  ];
+  List<Map<String, dynamic>> paquetesLocales(BuildContext context) {
+    final l10n = AppLocalizations.of(context)!;
+    return [
+      {
+        "nombre": l10n.packageQuechua,
+        "tamano": "15 MB",
+        "instalado": true,
+      },
+      {
+        "nombre": l10n.packageCuscoGuide,
+        "tamano": "32 MB",
+        "instalado": false,
+      },
+    ];
+  }
 
   void _onNavBarTap(int i) {
     setState(() => _currentIndex = i);
@@ -61,6 +69,7 @@ class _HomeScreenState extends State<HomeScreen> {
 
   @override
   Widget build(BuildContext context) {
+    final l10n = AppLocalizations.of(context)!;
     return Scaffold(
       backgroundColor: const Color(0xFFF6F5FA),
       body: SafeArea(
@@ -99,9 +108,9 @@ class _HomeScreenState extends State<HomeScreen> {
                           ),
                         ),
                         const SizedBox(width: 12),
-                        const Text(
-                          "ULenguage",
-                          style: TextStyle(
+                        Text(
+                          l10n.appName,
+                          style: const TextStyle(
                             color: Colors.white,
                             fontWeight: FontWeight.bold,
                             fontSize: 24,
@@ -112,20 +121,20 @@ class _HomeScreenState extends State<HomeScreen> {
                       ],
                     ),
                     const SizedBox(height: 14),
-                    const Row(
+                    Row(
                       mainAxisAlignment: MainAxisAlignment.center,
                       children: [
                         _HeaderChip(
                           icon: Icons.wifi,
-                          label: "Conectado",
-                          color: Color(0xFF69C779),
+                          label: l10n.connected,
+                          color: const Color(0xFF69C779),
                         ),
-                        SizedBox(width: 12),
+                        const SizedBox(width: 12),
                         _HeaderChip(
                           icon: Icons.inventory_2_rounded,
-                          label: "3 paquetes",
+                          label: l10n.packagesCount,
                           color: Colors.white,
-                          textColor: Color(0xFFDA2C38),
+                          textColor: const Color(0xFFDA2C38),
                         ),
                       ],
                     ),
@@ -146,7 +155,7 @@ class _HomeScreenState extends State<HomeScreen> {
                     ),
                     const SizedBox(height: 8),
                     Text(
-                      "¡Bienvenido, $nombreUsuario!",
+                      l10n.welcomeUser(nombreUsuario),
                       style: const TextStyle(
                         fontWeight: FontWeight.bold,
                         color: Color(0xFFDA2C38),
@@ -155,9 +164,9 @@ class _HomeScreenState extends State<HomeScreen> {
                       ),
                     ),
                     const SizedBox(height: 4),
-                    const Text(
-                      "Tu aventura cultural continúa",
-                      style: TextStyle(fontSize: 15, color: Color(0xFF656565)),
+                    Text(
+                      l10n.culturalAdventure,
+                      style: const TextStyle(fontSize: 15, color: Color(0xFF656565)),
                     ),
                     const SizedBox(height: 18),
                     Card(
@@ -181,9 +190,9 @@ class _HomeScreenState extends State<HomeScreen> {
                                   color: Color(0xFFDA2C38),
                                 ),
                                 const SizedBox(width: 7),
-                                const Text(
-                                  "Progreso Cultural",
-                                  style: TextStyle(
+                                Text(
+                                  l10n.culturalProgress,
+                                  style: const TextStyle(
                                     fontWeight: FontWeight.bold,
                                     fontSize: 17,
                                     fontFamily: 'SFProDisplay',
@@ -201,9 +210,9 @@ class _HomeScreenState extends State<HomeScreen> {
                               ],
                             ),
                             const SizedBox(height: 4),
-                            const Text(
-                              "Explorando culturas andinas",
-                              style: TextStyle(
+                            Text(
+                              l10n.exploringAndeanCultures,
+                              style: const TextStyle(
                                 fontWeight: FontWeight.w500,
                                 fontSize: 14,
                                 color: Color(0xFFDA2C38),
@@ -222,9 +231,9 @@ class _HomeScreenState extends State<HomeScreen> {
                               ),
                             ),
                             const SizedBox(height: 10),
-                            const Text(
-                              "Continúa explorando para desbloquear nuevos horizontes",
-                              style: TextStyle(
+                            Text(
+                              l10n.keepExploring,
+                              style: const TextStyle(
                                 fontSize: 13,
                                 color: Color(0xFF757575),
                               ),
@@ -245,31 +254,31 @@ class _HomeScreenState extends State<HomeScreen> {
                   shape: RoundedRectangleBorder(
                     borderRadius: BorderRadius.circular(22),
                   ),
-                  child: const Padding(
-                    padding: EdgeInsets.symmetric(vertical: 22, horizontal: 18),
+                  child: Padding(
+                    padding: const EdgeInsets.symmetric(vertical: 22, horizontal: 18),
                     child: Column(
                       children: [
-                        Icon(
+                        const Icon(
                           Icons.menu_book_rounded,
                           color: Color(0xFFDA2C38),
                           size: 32,
                         ),
-                        SizedBox(height: 8),
+                        const SizedBox(height: 8),
                         Text(
-                          '"Cada idioma es una ventana al alma de un pueblo"',
+                          '"${l10n.languageWindowQuote}"',
                           textAlign: TextAlign.center,
-                          style: TextStyle(
+                          style: const TextStyle(
                             fontWeight: FontWeight.bold,
                             fontSize: 16,
                             color: Color(0xFFDA2C38),
                             fontFamily: 'SFProDisplay',
                           ),
                         ),
-                        SizedBox(height: 10),
+                        const SizedBox(height: 10),
                         Text(
-                          "Disfruta aprendiendo y explorando nuevas culturas. Tu conexión con las culturas andinas crece cada día.",
+                          l10n.enjoyLearning,
                           textAlign: TextAlign.center,
-                          style: TextStyle(
+                          style: const TextStyle(
                             color: Color(0xFF444444),
                             fontSize: 13,
                             fontFamily: 'SFProDisplay',
@@ -294,20 +303,20 @@ class _HomeScreenState extends State<HomeScreen> {
                     child: Column(
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
-                        const Text(
-                          "Paquetes Disponibles:",
-                          style: TextStyle(
+                        Text(
+                          l10n.availablePackages,
+                          style: const TextStyle(
                             fontWeight: FontWeight.w600,
                             fontSize: 16,
                           ),
                         ),
                         const SizedBox(height: 3),
-                        const Text(
-                          "Descarga contenido para usar la app sin conexión a internet.",
-                          style: TextStyle(fontSize: 13, color: Colors.black54),
+                        Text(
+                          l10n.downloadOffline,
+                          style: const TextStyle(fontSize: 13, color: Colors.black54),
                         ),
                         const SizedBox(height: 14),
-                        for (final paquete in paquetesLocales)
+                        for (final paquete in paquetesLocales(context))
                           _PaqueteListTile(paquete: paquete),
                       ],
                     ),
@@ -372,6 +381,7 @@ class _PaqueteListTile extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final bool instalado = paquete['instalado'] == true;
+    final nombre = paquete['nombre'] ?? '';
     return Container(
       margin: const EdgeInsets.only(bottom: 11),
       decoration: BoxDecoration(
@@ -383,7 +393,7 @@ class _PaqueteListTile extends StatelessWidget {
         dense: true,
         contentPadding: const EdgeInsets.symmetric(horizontal: 13, vertical: 6),
         title: Text(
-          paquete['nombre'] ?? '',
+          nombre,
           style: const TextStyle(
             fontWeight: FontWeight.w500,
             color: Colors.black87,

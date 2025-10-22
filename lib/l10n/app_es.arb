@@ -1,0 +1,233 @@
+{
+  "@@locale": "es",
+  "packageQuechua": "Paquete de idioma Quechua",
+  "packageCuscoGuide": "Guía de Cuzco",
+  "navbarHome": "Inicio",
+  "navbarTranslate": "Traducción",
+  "navbarExplore": "Explorar",
+  "navbarProfile": "Perfil",
+  "ocrTitle": "Escaneo (OCR)",
+  "ocrScanning": "Escaneando...",
+  "ocrSelectImage": "Selecciona una imagen para analizar y detectar objetos culturales.",
+  "ocrScanImage": "Escanear Imagen",
+  "ocrScanError": "Error de escaneo OCR",
+  "ocrConnectionError": "Error de conexión",
+  "ocrNoObjects": "No se detectaron objetos.",
+  "ocrObjectsDetected": "Objetos Detectados",
+  "ocrNewScan": "Nuevo Escaneo",
+  "ocrAnalysis": "Análisis Cultural",
+  "ocrIdentification": "Identificación",
+  "ocrExplanation": "Explicación Cultural",
+  "ocrTranslation": "Traducción",
+  "ocrBack": "Volver",
+  "ocrBoundingBox": "Bounding Box:",
+  "explore": "Explorar",
+  "discoverAndean": "Descubre las maravillas de la cultura andina.",
+  "searchSites": "Buscar sitios o rutas...",
+  "popularSites": "Sitios Populares",
+  "mountain": "Montaña",
+  "city": "Ciudad",
+  "culturalRoute": "Ruta Cultural",
+  "easy": "Fácil",
+  "medium": "Media",
+  "hard": "Difícil",
+  "culturalDescription": "Descripción Cultural",
+  "howToGet": "Como llegar",
+  "close": "Cerrar",
+  "profileTitle": "Perfil",
+  "culturalUser": "Usuario cultural",
+  "achievementsActivity": "Logros y Actividad",
+  "culturalAchievements": "8 Logros culturales",
+  "keepLearning": "¡Sigue aprendiendo idiomas y explorando!",
+  "translations": "248 Traducciones",
+  "translationsToday": "+12 traducciones hoy",
+  "placesExplored": "4 Lugares explorados",
+  "culturalRoutes": "3 rutas culturales",
+  "accountPreferences": "Cuenta y Preferencias",
+  "notifications": "Notificaciones",
+  "accountSettings": "Configuración de la cuenta",
+  "changePassword": "Cambiar contraseña",
+  "helpSupport": "Ayuda y soporte",
+  "logout": "Cerrar sesión",
+  "version": "v1.0.0 • ULenguage",
+  "connected": "Conectado",
+  "packagesCount": "3 paquetes",
+  "welcomeUser": "¡Bienvenido, {user}!",
+  "culturalAdventure": "Tu aventura cultural continúa",
+  "culturalProgress": "Progreso Cultural",
+  "exploringAndeanCultures": "Explorando culturas andinas",
+  "keepExploring": "Continúa explorando para desbloquear nuevos horizontes",
+  "languageWindowQuote": "Cada idioma es una ventana al alma de un pueblo",
+  "enjoyLearning": "Disfruta aprendiendo y explorando nuevas culturas. Tu conexión con las culturas andinas crece cada día.",
+  "availablePackages": "Paquetes Disponibles:",
+  "downloadOffline": "Descarga contenido para usar la app sin conexión a internet.",
+  "quechuaPackage": "Paquete de idioma Quechua",
+  "cuscoGuide": "Guía de Cuzco",
+  "appName": "ULenguage",
+  "@appName": {
+    "description": "Nombre de la aplicación"
+  },
+  
+  "welcome": "Bienvenido",
+  "@welcome": {
+    "description": "Mensaje de bienvenida"
+  },
+  
+  "welcomeSubtitle": "Aprende, traduce y conecta\ncon el mundo andino.",
+  "@welcomeSubtitle": {
+    "description": "Subtítulo de bienvenida"
+  },
+  
+  "startAdventure": "¡Inicia tu aventura!",
+  "@startAdventure": {
+    "description": "Botón de inicio de aventura"
+  },
+  
+  "login": "Iniciar sesión",
+  "@login": {
+    "description": "Botón de inicio de sesión"
+  },
+  
+  "email": "Correo electrónico",
+  "@email": {
+    "description": "Campo de email"
+  },
+  
+  "password": "Contraseña",
+  "@password": {
+    "description": "Campo de contraseña"
+  },
+  
+  "forgotPassword": "¿Olvidaste tu contraseña?",
+  "@forgotPassword": {
+    "description": "Enlace para recuperar contraseña"
+  },
+  
+  "continueWith": "O continúa con",
+  "@continueWith": {
+    "description": "Texto para login social"
+  },
+  
+  "continueWithGoogle": "Continuar con Google",
+  "@continueWithGoogle": {
+    "description": "Botón de login con Google"
+  },
+  
+  "continueWithFacebook": "Continuar con Facebook",
+  "@continueWithFacebook": {
+    "description": "Botón de login con Facebook"
+  },
+  
+  "noAccount": "¿No tienes cuenta?",
+  "@noAccount": {
+    "description": "Pregunta si no tiene cuenta"
+  },
+  
+  "register": "Regístrate",
+  "@register": {
+    "description": "Botón de registro"
+  },
+  
+  "home": "Inicio",
+  "@home": {
+    "description": "Tab de inicio"
+  },
+  
+  "explore": "Explorar",
+  "@explore": {
+    "description": "Tab de explorar"
+  },
+  
+  "translate": "Traducir",
+  "@translate": {
+    "description": "Tab de traducir"
+  },
+  
+  "profile": "Perfil",
+  "@profile": {
+    "description": "Tab de perfil"
+  },
+  
+  "scanText": "Escanear texto",
+  "@scanText": {
+    "description": "Botón para escanear texto"
+  },
+  
+  "takePhoto": "Tomar foto",
+  "@takePhoto": {
+    "description": "Botón para tomar foto"
+  },
+  
+  "selectFromGallery": "Seleccionar de galería",
+  "@selectFromGallery": {
+    "description": "Botón para seleccionar de galería"
+  },
+  
+  "cancel": "Cancelar",
+  "@cancel": {
+    "description": "Botón cancelar"
+  },
+  
+  "logout": "Cerrar sesión",
+  "@logout": {
+    "description": "Botón cerrar sesión"
+  },
+  
+  "settings": "Configuración",
+  "@settings": {
+    "description": "Configuración"
+  },
+  
+  "language": "Idioma",
+  "@language": {
+    "description": "Opción de idioma"
+  },
+  
+  "spanish": "Español",
+  "@spanish": {
+    "description": "Idioma español"
+  },
+  
+  "english": "Inglés",
+  "@english": {
+    "description": "Idioma inglés"
+  },
+  
+  "quechua": "Quechua Cusqueño",
+  "@quechua": {
+    "description": "Idioma quechua"
+  },
+  
+  "selectLanguage": "Seleccionar idioma",
+  "@selectLanguage": {
+    "description": "Título para selección de idioma"
+  },
+  
+  "save": "Guardar",
+  "@save": {
+    "description": "Botón guardar"
+  },
+  
+  "error": "Error",
+  "@error": {
+    "description": "Título de error"
+  },
+  
+  "success": "Éxito",
+  "@success": {
+    "description": "Título de éxito"
+  },
+  
+  "loading": "Cargando...",
+  "@loading": {
+    "description": "Mensaje de carga"
+  },
+  "authErrorTitle": "Error de autenticación",
+  "@authErrorTitle": {
+    "description": "Título del diálogo de error de autenticación"
+  },
+  "ok": "OK",
+  "@ok": {
+    "description": "Botón de aceptar genérico"
+  }
+}

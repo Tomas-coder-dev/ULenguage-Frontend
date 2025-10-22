@@ -5,7 +5,7 @@ import 'package:flutter/foundation.dart';
 import '../config/app_config.dart';
 
 class AuthService {
-  // Configura Google Sign-In para Android
+  // Configura Google Sign-In para Android y Web
   final GoogleSignIn _googleSignIn = GoogleSignIn(
     scopes: <String>[
       'email',

@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:http/http.dart' as http;
 import 'dart:convert';
+import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 import '../widgets/navbar_temp.dart';
 
 class OcrObject {
@@ -121,15 +122,15 @@ class _OcrScreenState extends State<OcrScreen> {
   @override
   Widget build(BuildContext context) {
     const bg = Color(0xFFF8F7FA);
-
+    final l10n = AppLocalizations.of(context)!;
     return CupertinoPageScaffold(
       backgroundColor: bg,
-      navigationBar: const CupertinoNavigationBar(
+      navigationBar: CupertinoNavigationBar(
         middle: Text(
-          "Escaneo (OCR)",
-          style: TextStyle(color: Colors.white, fontWeight: FontWeight.bold),
+          l10n.ocrTitle,
+          style: const TextStyle(color: Colors.white, fontWeight: FontWeight.bold),
         ),
-        backgroundColor: Color(0xFFDA2C38),
+        backgroundColor: const Color(0xFFDA2C38),
         border: null,
       ),
       child: Stack(
@@ -154,8 +155,8 @@ class _OcrScreenState extends State<OcrScreen> {
                           const SizedBox(height: 30),
                           Text(
                             scanning
-                                ? "Escaneando..."
-                                : "Selecciona una imagen para analizar y detectar objetos culturales.",
+                                ? l10n.ocrScanning
+                                : l10n.ocrSelectImage,
                             style: const TextStyle(
                               fontSize: 18,
                               color: Color(0xFF363636),
@@ -184,8 +185,8 @@ class _OcrScreenState extends State<OcrScreen> {
                                 const SizedBox(width: 9),
                                 Text(
                                   scanning
-                                      ? "Escaneando..."
-                                      : "Escanear Imagen",
+                                      ? l10n.ocrScanning
+                                      : l10n.ocrScanImage,
                                   style: const TextStyle(
                                     fontSize: 17,
                                     fontWeight: FontWeight.w600,
@@ -204,7 +205,13 @@ class _OcrScreenState extends State<OcrScreen> {
                           if (errorMsg.isNotEmpty) ...[
                             const SizedBox(height: 18),
                             Text(
-                              errorMsg,
+                              errorMsg == 'Error de escaneo OCR'
+                                  ? l10n.ocrScanError
+                                  : errorMsg == 'Error de conexión'
+                                  ? l10n.ocrConnectionError
+                                  : errorMsg == 'No se detectaron objetos.'
+                                  ? l10n.ocrNoObjects
+                                  : errorMsg,
                               style: const TextStyle(
                                 color: Colors.red,
                                 fontWeight: FontWeight.bold,
@@ -219,10 +226,10 @@ class _OcrScreenState extends State<OcrScreen> {
                     ? Column(
                         children: [
                           const SizedBox(height: 18),
-                          const Center(
+                          Center(
                             child: Text(
-                              "Objetos Detectados",
-                              style: TextStyle(
+                              l10n.ocrObjectsDetected,
+                              style: const TextStyle(
                                 fontWeight: FontWeight.bold,
                                 fontSize: 22,
                                 color: Color(0xFF222222),
@@ -233,7 +240,13 @@ class _OcrScreenState extends State<OcrScreen> {
                           const SizedBox(height: 10),
                           if (errorMsg.isNotEmpty)
                             Text(
-                              errorMsg,
+                              errorMsg == 'Error de escaneo OCR'
+                                  ? l10n.ocrScanError
+                                  : errorMsg == 'Error de conexión'
+                                  ? l10n.ocrConnectionError
+                                  : errorMsg == 'No se detectaron objetos.'
+                                  ? l10n.ocrNoObjects
+                                  : errorMsg,
                               style: const TextStyle(
                                 color: Colors.red,
                                 fontWeight: FontWeight.bold,
@@ -280,18 +293,18 @@ class _OcrScreenState extends State<OcrScreen> {
                             borderRadius: BorderRadius.circular(18),
                             color: const Color(0xFFDA2C38),
                             onPressed: _resetScan,
-                            child: const Row(
+                            child: Row(
                               mainAxisSize: MainAxisSize.min,
                               children: [
-                                Icon(
+                                const Icon(
                                   CupertinoIcons.camera,
                                   color: Colors.white,
                                   size: 20,
                                 ),
-                                SizedBox(width: 9),
+                                const SizedBox(width: 9),
                                 Text(
-                                  "Nuevo Escaneo",
-                                  style: TextStyle(
+                                  l10n.ocrNewScan,
+                                  style: const TextStyle(
                                     fontSize: 16,
                                     fontWeight: FontWeight.w600,
                                     color: Colors.white,
@@ -321,7 +334,7 @@ class _OcrScreenState extends State<OcrScreen> {
                           const SizedBox(height: 6),
                           Center(
                             child: Text(
-                              "Análisis Cultural",
+                              l10n.ocrAnalysis,
                               style: const TextStyle(
                                 fontWeight: FontWeight.w500,
                                 fontSize: 17,
@@ -341,21 +354,21 @@ class _OcrScreenState extends State<OcrScreen> {
                               children: [
                                 _OcrResultSection(
                                   icon: CupertinoIcons.textformat_alt,
-                                  title: "Identificación",
+                                  title: l10n.ocrIdentification,
                                   color: Color(0xFFDA2C38),
                                   content: selectedObject!.name,
                                 ),
                                 const SizedBox(height: 18),
                                 _OcrResultSection(
                                   icon: CupertinoIcons.book,
-                                  title: "Explicación Cultural",
+                                  title: l10n.ocrExplanation,
                                   color: Color(0xFFDA2C38),
                                   content: selectedObject!.explanation,
                                 ),
                                 const SizedBox(height: 18),
                                 _OcrResultSection(
                                   icon: CupertinoIcons.globe,
-                                  title: "Traducción",
+                                  title: l10n.ocrTranslation,
                                   color: Color(0xFFDA2C38),
                                   content: selectedObject!.translation,
                                 ),
@@ -366,7 +379,7 @@ class _OcrScreenState extends State<OcrScreen> {
                           if (selectedObject!.boundingBox.isNotEmpty)
                             Center(
                               child: Text(
-                                "Bounding Box: ${selectedObject!.boundingBox.map((v) => '(${v['x']}, ${v['y']})').join(', ')}",
+                                '${l10n.ocrBoundingBox} ${selectedObject!.boundingBox.map((v) => '(${v['x']}, ${v['y']})').join(', ')}',
                                 style: const TextStyle(
                                   color: Color(0xFFDA2C38),
                                   fontWeight: FontWeight.w500,
@@ -387,18 +400,18 @@ class _OcrScreenState extends State<OcrScreen> {
                                 vertical: 15,
                                 horizontal: 38,
                               ),
-                              child: const Row(
+                              child: Row(
                                 mainAxisSize: MainAxisSize.min,
                                 children: [
-                                  Icon(
+                                  const Icon(
                                     CupertinoIcons.chevron_left,
                                     color: Colors.white,
                                     size: 20,
                                   ),
-                                  SizedBox(width: 9),
+                                  const SizedBox(width: 9),
                                   Text(
-                                    "Volver",
-                                    style: TextStyle(
+                                    l10n.ocrBack,
+                                    style: const TextStyle(
                                       fontSize: 16,
                                       fontWeight: FontWeight.w600,
                                     ),
