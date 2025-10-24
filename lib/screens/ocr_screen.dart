@@ -1,20 +1,17 @@
-import 'package:flutter/cupertino.dart';
+import 'dart:io';
 import 'package:flutter/material.dart';
+import 'package:flutter/cupertino.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:http/http.dart' as http;
 import 'dart:convert';
-import '../widgets/navbar_temp.dart';
 
+// Modelo de objeto detectado
 class OcrObject {
   final String name;
-  final double score;
-  final List boundingBox;
   final String explanation;
   final String translation;
   OcrObject({
     required this.name,
-    required this.score,
-    required this.boundingBox,
     required this.explanation,
     required this.translation,
   });
@@ -29,16 +26,22 @@ class OcrScreen extends StatefulWidget {
 class _OcrScreenState extends State<OcrScreen> {
   bool scanning = false;
   bool scanned = false;
-  int _currentIndex = 2;
-
-  List<OcrObject> detectedObjects = [];
-  OcrObject? selectedObject;
   String errorMsg = '';
+  String scannedImagePath = '';
+  OcrObject? selectedObject;
+  List<OcrObject> detectedObjects = [];
+  String detectedLang = '';
 
-  Future<void> _pickAndScanImage() async {
+  final idiomas = [
+    {'label': 'Español', 'code': 'es', 'icon': '🇪🇸'},
+    {'label': 'Inglés', 'code': 'en', 'icon': '🇺🇸'},
+    {'label': 'Quechua', 'code': 'qu', 'icon': '🦙'},
+  ];
+  String targetLangCode = 'es';
+
+  Future<void> _pickAndScanImage(ImageSource source) async {
     final picker = ImagePicker();
-    final pickedFile = await picker.pickImage(source: ImageSource.gallery);
-
+    final pickedFile = await picker.pickImage(source: source);
     if (pickedFile == null) return;
 
     setState(() {
@@ -47,37 +50,37 @@ class _OcrScreenState extends State<OcrScreen> {
       detectedObjects = [];
       selectedObject = null;
       errorMsg = '';
+      scannedImagePath = pickedFile.path;
+      detectedLang = '';
     });
 
+    await _scanImageAndFetchObjects(pickedFile.path, targetLangCode);
+  }
+
+  Future<void> _scanImageAndFetchObjects(
+    String imagePath,
+    String langCode,
+  ) async {
     try {
-      final uri = Uri.parse(
-        'http://192.168.100.7:5000/api/analyze-and-explain',
-      ); // Cambia si tu endpoint es diferente
+      final uri = Uri.parse('http://192.168.100.7:5000/api/ocr/analyze');
       final request = http.MultipartRequest('POST', uri);
-      request.files.add(
-        await http.MultipartFile.fromPath('image', pickedFile.path),
-      );
-      // Si tu backend espera targetLang, envíalo
-      request.fields['targetLang'] = 'es';
+      request.files.add(await http.MultipartFile.fromPath('image', imagePath));
+      request.fields['targetLang'] = langCode;
 
       final response = await request.send();
       final respStr = await response.stream.bytesToString();
 
       if (response.statusCode == 200) {
         final data = json.decode(respStr);
-
-        // Arma la lista de objetos a mostrar (uno por objeto detectado)
         detectedObjects = [];
         final objects = data['objects'] ?? [];
         final explanations = data['explanations'] ?? [];
         final translations = data['translations'] ?? [];
-
+        detectedLang = data['detectedLang'] ?? '';
         for (int i = 0; i < objects.length; i++) {
           detectedObjects.add(
             OcrObject(
               name: objects[i]['name'] ?? '',
-              score: objects[i]['score']?.toDouble() ?? 0.0,
-              boundingBox: objects[i]['boundingBox'] ?? [],
               explanation: explanations.length > i ? explanations[i] : '',
               translation: translations.length > i ? translations[i] : '',
             ),
@@ -86,6 +89,8 @@ class _OcrScreenState extends State<OcrScreen> {
         setState(() {
           scanning = false;
           scanned = true;
+          selectedObject =
+              detectedObjects.isNotEmpty ? detectedObjects[0] : null;
           errorMsg = detectedObjects.isEmpty ? 'No se detectaron objetos.' : '';
         });
       } else {
@@ -102,322 +107,418 @@ class _OcrScreenState extends State<OcrScreen> {
     }
   }
 
-  void _selectObject(OcrObject obj) {
-    setState(() {
-      selectedObject = obj;
-    });
-  }
+  void _resetScan() => setState(() {
+        scanning = false;
+        scanned = false;
+        detectedObjects = [];
+        selectedObject = null;
+        errorMsg = '';
+        scannedImagePath = '';
+        detectedLang = '';
+      });
 
-  void _resetScan() {
+  Future<void> _changeLangAndReload(String langCode) async {
     setState(() {
-      scanning = false;
-      scanned = false;
-      detectedObjects = [];
-      selectedObject = null;
+      scanning = true;
       errorMsg = '';
+      targetLangCode = langCode;
     });
+    await _scanImageAndFetchObjects(scannedImagePath, langCode);
+    if (selectedObject != null && detectedObjects.isNotEmpty) {
+      final idx = detectedObjects.indexWhere(
+        (o) => o.name == selectedObject!.name,
+      );
+      setState(() => selectedObject = idx != -1 ? detectedObjects[idx] : null);
+    }
   }
 
   @override
   Widget build(BuildContext context) {
-    const bg = Color(0xFFF8F7FA);
+    final accent = const Color(0xFFDA2C38);
+    final softRed = const Color(0xFFFCE7E9);
+    final bgColor = const Color(0xFFF8F7FA);
 
-    return CupertinoPageScaffold(
-      backgroundColor: bg,
-      navigationBar: const CupertinoNavigationBar(
-        middle: Text(
-          "Escaneo (OCR)",
-          style: TextStyle(color: Colors.white, fontWeight: FontWeight.bold),
+    return Scaffold(
+      backgroundColor: bgColor,
+      body: SafeArea(
+        child: Center(
+          child: ConstrainedBox(
+            constraints: BoxConstraints(
+              maxWidth: MediaQuery.of(context).size.width > 600
+                  ? 520
+                  : double.infinity,
+            ),
+            child: Padding(
+              padding: const EdgeInsets.symmetric(
+                horizontal: 16,
+                vertical: 14,
+              ),
+              child: (!scanned)
+                  ? _buildInitial(accent, softRed)
+                  : selectedObject == null
+                      ? _buildNoObjects(accent, softRed)
+                      : _buildObjectDetail(
+                          context,
+                          selectedObject!,
+                          accent,
+                          softRed,
+                        ),
+            ),
+          ),
         ),
-        backgroundColor: Color(0xFFDA2C38),
-        border: null,
       ),
-      child: Stack(
-        children: [
-          Center(
-            child: ConstrainedBox(
-              constraints: const BoxConstraints(maxWidth: 520),
-              child: Padding(
-                padding: const EdgeInsets.symmetric(
-                  horizontal: 18,
-                  vertical: 20,
+    );
+  }
+
+  Widget _buildInitial(Color accent, Color softRed) {
+    return Column(
+      mainAxisAlignment: MainAxisAlignment.center,
+      children: [
+        const Icon(
+          CupertinoIcons.camera_viewfinder,
+          size: 62,
+          color: Color(0xFFDA2C38),
+        ),
+        if (scannedImagePath.isNotEmpty) ...[
+          const SizedBox(height: 13),
+          ClipRRect(
+            borderRadius: BorderRadius.circular(14),
+            child: Image.file(
+              File(scannedImagePath),
+              height: 140,
+              fit: BoxFit.cover,
+            ),
+          ),
+        ],
+        const SizedBox(height: 15),
+        Text(
+          scanning
+              ? "Escaneando..."
+              : "Escanea una imagen y selecciona el idioma de la información cultural.",
+          style: TextStyle(
+            fontSize: 17,
+            color: accent,
+            fontWeight: FontWeight.w600,
+          ),
+          textAlign: TextAlign.center,
+        ),
+        const SizedBox(height: 12),
+        _buildLangSelector(accent, softRed),
+        const SizedBox(height: 15),
+        Row(
+          mainAxisAlignment: MainAxisAlignment.center,
+          children: [
+            _scanButton(
+              "Galería",
+              CupertinoIcons.photo,
+              accent,
+              softRed,
+              () => _pickAndScanImage(ImageSource.gallery),
+            ),
+            const SizedBox(width: 13),
+            _scanButton(
+              "Foto",
+              CupertinoIcons.camera,
+              accent,
+              softRed,
+              () => _pickAndScanImage(ImageSource.camera),
+            ),
+          ],
+        ),
+        if (scanning) ...[
+          const SizedBox(height: 17),
+          CupertinoActivityIndicator(radius: 15, color: Color(0xFFDA2C38)),
+        ],
+        if (errorMsg.isNotEmpty) ...[
+          const SizedBox(height: 13),
+          Text(
+            errorMsg,
+            style: const TextStyle(
+              color: Colors.red,
+              fontWeight: FontWeight.bold,
+              fontSize: 15,
+            ),
+            textAlign: TextAlign.center,
+          ),
+        ],
+      ],
+    );
+  }
+
+  Widget _buildNoObjects(Color accent, Color softRed) {
+    return Column(
+      mainAxisAlignment: MainAxisAlignment.center,
+      children: [
+        if (scannedImagePath.isNotEmpty) ...[
+          const SizedBox(height: 13),
+          ClipRRect(
+            borderRadius: BorderRadius.circular(14),
+            child: Image.file(
+              File(scannedImagePath),
+              height: 140,
+              fit: BoxFit.cover,
+            ),
+          ),
+        ],
+        const SizedBox(height: 15),
+        Text(
+          "No se detectaron objetos.",
+          style: TextStyle(
+            fontSize: 17,
+            color: accent,
+            fontWeight: FontWeight.w600,
+          ),
+          textAlign: TextAlign.center,
+        ),
+        const SizedBox(height: 12),
+        _buildLangSelector(accent, softRed),
+        const SizedBox(height: 15),
+        CupertinoButton(
+          borderRadius: BorderRadius.circular(16),
+          color: accent,
+          onPressed: _resetScan,
+          child: const Row(
+            mainAxisSize: MainAxisSize.min,
+            children: [
+              Icon(CupertinoIcons.camera, color: Colors.white, size: 18),
+              SizedBox(width: 7),
+              Text(
+                "Nuevo Escaneo",
+                style: TextStyle(
+                  fontSize: 14,
+                  fontWeight: FontWeight.w600,
+                  color: Colors.white,
                 ),
-                child: (!scanned)
-                    ? Column(
-                        mainAxisAlignment: MainAxisAlignment.center,
-                        children: [
-                          const Icon(
-                            CupertinoIcons.camera_viewfinder,
-                            size: 64,
-                            color: Color(0xFFDA2C38),
-                          ),
-                          const SizedBox(height: 30),
-                          Text(
-                            scanning
-                                ? "Escaneando..."
-                                : "Selecciona una imagen para analizar y detectar objetos culturales.",
-                            style: const TextStyle(
-                              fontSize: 18,
-                              color: Color(0xFF363636),
-                              fontWeight: FontWeight.w500,
-                            ),
-                            textAlign: TextAlign.center,
-                          ),
-                          const SizedBox(height: 38),
-                          CupertinoButton.filled(
-                            padding: const EdgeInsets.symmetric(
-                              horizontal: 38,
-                              vertical: 15,
-                            ),
-                            borderRadius: BorderRadius.circular(15),
-                            onPressed: scanning ? null : _pickAndScanImage,
-                            child: Row(
-                              mainAxisSize: MainAxisSize.min,
-                              children: [
-                                Icon(
-                                  scanning
-                                      ? CupertinoIcons.time
-                                      : CupertinoIcons.doc_text_viewfinder,
-                                  color: Colors.white,
-                                  size: 22,
-                                ),
-                                const SizedBox(width: 9),
-                                Text(
-                                  scanning
-                                      ? "Escaneando..."
-                                      : "Escanear Imagen",
-                                  style: const TextStyle(
-                                    fontSize: 17,
-                                    fontWeight: FontWeight.w600,
-                                    letterSpacing: 0.5,
-                                  ),
-                                ),
-                              ],
-                            ),
-                          ),
-                          if (scanning) const SizedBox(height: 25),
-                          if (scanning)
-                            const CupertinoActivityIndicator(
-                              radius: 17,
-                              color: Color(0xFFDA2C38),
-                            ),
-                          if (errorMsg.isNotEmpty) ...[
-                            const SizedBox(height: 18),
-                            Text(
-                              errorMsg,
-                              style: const TextStyle(
-                                color: Colors.red,
-                                fontWeight: FontWeight.bold,
-                                fontSize: 16,
-                              ),
-                              textAlign: TextAlign.center,
-                            ),
-                          ],
-                        ],
-                      )
-                    : selectedObject == null
-                    ? Column(
-                        children: [
-                          const SizedBox(height: 18),
-                          const Center(
-                            child: Text(
-                              "Objetos Detectados",
-                              style: TextStyle(
-                                fontWeight: FontWeight.bold,
-                                fontSize: 22,
-                                color: Color(0xFF222222),
-                                letterSpacing: -0.5,
-                              ),
-                            ),
-                          ),
-                          const SizedBox(height: 10),
-                          if (errorMsg.isNotEmpty)
-                            Text(
-                              errorMsg,
-                              style: const TextStyle(
-                                color: Colors.red,
-                                fontWeight: FontWeight.bold,
-                                fontSize: 15,
-                              ),
-                            ),
-                          ...detectedObjects.map(
-                            (obj) => Padding(
-                              padding: const EdgeInsets.only(bottom: 12),
-                              child: CupertinoButton(
-                                borderRadius: BorderRadius.circular(18),
-                                color: const Color(0xFFFCE7E9),
-                                onPressed: () => _selectObject(obj),
-                                child: Row(
-                                  children: [
-                                    Icon(
-                                      CupertinoIcons.doc_text,
-                                      color: Color(0xFFDA2C38),
-                                      size: 24,
-                                    ),
-                                    const SizedBox(width: 14),
-                                    Expanded(
-                                      child: Text(
-                                        obj.name,
-                                        style: const TextStyle(
-                                          fontSize: 17,
-                                          fontWeight: FontWeight.w600,
-                                          color: Color(0xFFDA2C38),
-                                        ),
-                                      ),
-                                    ),
-                                    const Icon(
-                                      CupertinoIcons.right_chevron,
-                                      color: Color(0xFFDA2C38),
-                                      size: 22,
-                                    ),
-                                  ],
-                                ),
-                              ),
-                            ),
-                          ),
-                          const SizedBox(height: 22),
-                          CupertinoButton(
-                            borderRadius: BorderRadius.circular(18),
-                            color: const Color(0xFFDA2C38),
-                            onPressed: _resetScan,
-                            child: const Row(
-                              mainAxisSize: MainAxisSize.min,
-                              children: [
-                                Icon(
-                                  CupertinoIcons.camera,
-                                  color: Colors.white,
-                                  size: 20,
-                                ),
-                                SizedBox(width: 9),
-                                Text(
-                                  "Nuevo Escaneo",
-                                  style: TextStyle(
-                                    fontSize: 16,
-                                    fontWeight: FontWeight.w600,
-                                    color: Colors.white,
-                                  ),
-                                ),
-                              ],
-                            ),
-                          ),
-                        ],
-                      )
-                    : ListView(
-                        shrinkWrap: true,
-                        physics: const NeverScrollableScrollPhysics(),
-                        children: [
-                          const SizedBox(height: 18),
-                          Center(
-                            child: Text(
-                              selectedObject!.name,
-                              style: const TextStyle(
-                                fontWeight: FontWeight.bold,
-                                fontSize: 26,
-                                color: Color(0xFF222222),
-                                letterSpacing: -0.5,
-                              ),
-                            ),
-                          ),
-                          const SizedBox(height: 6),
-                          Center(
-                            child: Text(
-                              "Análisis Cultural",
-                              style: const TextStyle(
-                                fontWeight: FontWeight.w500,
-                                fontSize: 17,
-                                color: Color(0xFF888888),
-                                letterSpacing: 0.01,
-                              ),
-                            ),
-                          ),
-                          const SizedBox(height: 24),
-                          _CupertinoCard(
-                            padding: const EdgeInsets.symmetric(
-                              vertical: 19,
-                              horizontal: 19,
-                            ),
-                            child: Column(
-                              crossAxisAlignment: CrossAxisAlignment.stretch,
-                              children: [
-                                _OcrResultSection(
-                                  icon: CupertinoIcons.textformat_alt,
-                                  title: "Identificación",
-                                  color: Color(0xFFDA2C38),
-                                  content: selectedObject!.name,
-                                ),
-                                const SizedBox(height: 18),
-                                _OcrResultSection(
-                                  icon: CupertinoIcons.book,
-                                  title: "Explicación Cultural",
-                                  color: Color(0xFFDA2C38),
-                                  content: selectedObject!.explanation,
-                                ),
-                                const SizedBox(height: 18),
-                                _OcrResultSection(
-                                  icon: CupertinoIcons.globe,
-                                  title: "Traducción",
-                                  color: Color(0xFFDA2C38),
-                                  content: selectedObject!.translation,
-                                ),
-                              ],
-                            ),
-                          ),
-                          const SizedBox(height: 25),
-                          if (selectedObject!.boundingBox.isNotEmpty)
-                            Center(
-                              child: Text(
-                                "Bounding Box: ${selectedObject!.boundingBox.map((v) => '(${v['x']}, ${v['y']})').join(', ')}",
-                                style: const TextStyle(
-                                  color: Color(0xFFDA2C38),
-                                  fontWeight: FontWeight.w500,
-                                  fontSize: 14,
-                                ),
-                              ),
-                            ),
-                          const SizedBox(height: 28),
-                          Center(
-                            child: CupertinoButton.filled(
-                              borderRadius: const BorderRadius.all(
-                                Radius.circular(15),
-                              ),
-                              onPressed: () => setState(() {
-                                selectedObject = null;
-                              }),
-                              padding: const EdgeInsets.symmetric(
-                                vertical: 15,
-                                horizontal: 38,
-                              ),
-                              child: const Row(
-                                mainAxisSize: MainAxisSize.min,
-                                children: [
-                                  Icon(
-                                    CupertinoIcons.chevron_left,
-                                    color: Colors.white,
-                                    size: 20,
-                                  ),
-                                  SizedBox(width: 9),
-                                  Text(
-                                    "Volver",
-                                    style: TextStyle(
-                                      fontSize: 16,
-                                      fontWeight: FontWeight.w600,
-                                    ),
-                                  ),
-                                ],
-                              ),
-                            ),
-                          ),
-                          const SizedBox(height: 18),
-                        ],
-                      ),
+              ),
+            ],
+          ),
+        ),
+      ],
+    );
+  }
+
+  Widget _buildLangSelector(Color accent, Color softRed) {
+    return Row(
+      mainAxisAlignment: MainAxisAlignment.center,
+      children: [
+        ...idiomas.map((lang) {
+          final selected = targetLangCode == lang['code'];
+          return GestureDetector(
+            onTap: scanning ? null : () => _changeLangAndReload(lang['code']!),
+            child: Container(
+              margin: const EdgeInsets.symmetric(horizontal: 3),
+              padding: const EdgeInsets.symmetric(horizontal: 13, vertical: 8),
+              decoration: BoxDecoration(
+                color: selected ? softRed : Colors.transparent,
+                border: Border.all(color: accent, width: selected ? 2 : 1),
+                borderRadius: BorderRadius.circular(14),
+              ),
+              child: Row(
+                mainAxisSize: MainAxisSize.min,
+                children: [
+                  Text(lang['icon']!, style: const TextStyle(fontSize: 22)),
+                  const SizedBox(width: 5),
+                  Text(
+                    lang['label']!,
+                    style: TextStyle(
+                      fontWeight: FontWeight.bold,
+                      color: accent,
+                      fontSize: 16,
+                      letterSpacing: 0.2,
+                      decoration: selected
+                          ? TextDecoration.underline
+                          : TextDecoration.none,
+                      decorationColor: accent,
+                      decorationThickness: 2,
+                    ),
+                  ),
+                ],
+              ),
+            ),
+          );
+        }),
+      ],
+    );
+  }
+
+  Widget _scanButton(
+    String label,
+    IconData icon,
+    Color accent,
+    Color softRed,
+    VoidCallback onPressed,
+  ) {
+    return CupertinoButton(
+      padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 12),
+      borderRadius: BorderRadius.circular(14),
+      color: accent,
+      onPressed: scanning ? null : onPressed,
+      child: Row(
+        mainAxisSize: MainAxisSize.min,
+        children: [
+          Icon(icon, color: Colors.white, size: 19),
+          const SizedBox(width: 6),
+          Text(
+            label,
+            style: const TextStyle(
+              fontSize: 15,
+              fontWeight: FontWeight.w600,
+              letterSpacing: 0.4,
+              color: Colors.white,
+            ),
+          ),
+        ],
+      ),
+    );
+  }
+
+  Widget _buildObjectDetail(
+    BuildContext context,
+    OcrObject obj,
+    Color accent,
+    Color softRed,
+  ) {
+    return SingleChildScrollView(
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.center,
+        children: [
+          const SizedBox(height: 10),
+          Row(
+            children: [
+              IconButton(
+                icon: Icon(
+                  CupertinoIcons.left_chevron,
+                  color: accent,
+                  size: 27,
+                ),
+                onPressed: () => setState(() => selectedObject = null),
+              ),
+              Expanded(
+                child: Center(
+                  child: Text(
+                    "Escaneo Cultural",
+                    style: TextStyle(
+                      fontWeight: FontWeight.bold,
+                      color: accent,
+                      fontSize: 20,
+                      letterSpacing: 0.1,
+                    ),
+                  ),
+                ),
+              ),
+              const SizedBox(width: 38),
+            ],
+          ),
+          if (scannedImagePath.isNotEmpty)
+            Padding(
+              padding: const EdgeInsets.symmetric(vertical: 8),
+              child: ClipRRect(
+                borderRadius: BorderRadius.circular(12),
+                child: Image.file(
+                  File(scannedImagePath),
+                  height: 125,
+                  fit: BoxFit.cover,
+                ),
+              ),
+            ),
+          const SizedBox(height: 7),
+          Text(
+            obj.name,
+            style: TextStyle(
+              fontSize: 27,
+              fontWeight: FontWeight.bold,
+              color: accent,
+              letterSpacing: 0.6,
+            ),
+            textAlign: TextAlign.center,
+          ),
+          const SizedBox(height: 12),
+          _buildLangSelector(accent, softRed),
+          const SizedBox(height: 10),
+          if (detectedLang.isNotEmpty)
+            Row(
+              mainAxisAlignment: MainAxisAlignment.center,
+              children: [
+                Icon(CupertinoIcons.globe, color: accent, size: 20),
+                const SizedBox(width: 4),
+                Text(
+                  "Idioma detectado: $detectedLang",
+                  style: TextStyle(
+                    fontWeight: FontWeight.bold,
+                    fontSize: 14,
+                    color: accent,
+                  ),
+                ),
+              ],
+            ),
+          const SizedBox(height: 9),
+          Center(
+            child: Text(
+              "Análisis Cultural",
+              style: TextStyle(
+                fontWeight: FontWeight.w500,
+                fontSize: 16,
+                // ignore: deprecated_member_use
+                color: accent.withOpacity(0.65),
+                letterSpacing: 0.1,
               ),
             ),
           ),
-          Align(
-            alignment: Alignment.bottomCenter,
-            child: Navbar(
-              currentIndex: _currentIndex,
-              onTap: (i) => setState(() => _currentIndex = i),
+          const SizedBox(height: 12),
+          Card(
+            elevation: 5,
+            shape: RoundedRectangleBorder(
+              borderRadius: BorderRadius.circular(18),
+            ),
+            color: Colors.white,
+            child: Padding(
+              padding: const EdgeInsets.symmetric(vertical: 19, horizontal: 17),
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  _OcrResultSection(
+                    icon: CupertinoIcons.textformat_alt,
+                    title: "Identificación",
+                    color: accent,
+                    content: obj.name,
+                  ),
+                  const SizedBox(height: 12),
+                  _OcrResultSection(
+                    icon: CupertinoIcons.book,
+                    title: "Explicación Cultural",
+                    color: accent,
+                    content: obj.explanation,
+                  ),
+                  const SizedBox(height: 12),
+                  _OcrResultSection(
+                    icon: CupertinoIcons.globe,
+                    title: "Traducción",
+                    color: accent,
+                    content: obj.translation,
+                  ),
+                ],
+              ),
+            ),
+          ),
+          const SizedBox(height: 14),
+          CupertinoButton(
+            borderRadius: BorderRadius.circular(16),
+            color: accent,
+            onPressed: _resetScan,
+            child: const Row(
+              mainAxisSize: MainAxisSize.min,
+              children: [
+                Icon(CupertinoIcons.camera, color: Colors.white, size: 18),
+                SizedBox(width: 7),
+                Text(
+                  "Nuevo Escaneo",
+                  style: TextStyle(
+                    fontSize: 14,
+                    fontWeight: FontWeight.w600,
+                    color: Colors.white,
+                  ),
+                ),
+              ],
             ),
           ),
         ],
@@ -431,21 +532,19 @@ class _OcrResultSection extends StatelessWidget {
   final String title;
   final String content;
   final Color color;
-
   const _OcrResultSection({
     required this.icon,
     required this.title,
     required this.content,
     required this.color,
   });
-
   @override
   Widget build(BuildContext context) {
     return Row(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
-        Icon(icon, color: color, size: 25),
-        const SizedBox(width: 13),
+        Icon(icon, color: color, size: 22),
+        const SizedBox(width: 11),
         Expanded(
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
@@ -455,7 +554,7 @@ class _OcrResultSection extends StatelessWidget {
                 style: TextStyle(
                   color: color,
                   fontWeight: FontWeight.bold,
-                  fontSize: 16,
+                  fontSize: 15,
                   letterSpacing: 0.1,
                 ),
               ),
@@ -464,7 +563,7 @@ class _OcrResultSection extends StatelessWidget {
                 content,
                 style: const TextStyle(
                   fontWeight: FontWeight.w500,
-                  fontSize: 15.5,
+                  fontSize: 15,
                   color: Color(0xFF353535),
                   height: 1.37,
                   letterSpacing: 0.01,
@@ -474,30 +573,6 @@ class _OcrResultSection extends StatelessWidget {
           ),
         ),
       ],
-    );
-  }
-}
-
-class _CupertinoCard extends StatelessWidget {
-  final Widget child;
-  final EdgeInsetsGeometry? padding;
-  const _CupertinoCard({required this.child, this.padding});
-  @override
-  Widget build(BuildContext context) {
-    return Container(
-      padding: padding ?? const EdgeInsets.all(16),
-      decoration: BoxDecoration(
-        color: Colors.white,
-        borderRadius: BorderRadius.circular(22),
-        boxShadow: const [
-          BoxShadow(
-            color: Color(0x12000000),
-            blurRadius: 10,
-            offset: Offset(0, 4),
-          ),
-        ],
-      ),
-      child: child,
     );
   }
 }

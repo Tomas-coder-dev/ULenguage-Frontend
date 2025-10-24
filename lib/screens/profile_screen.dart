@@ -93,11 +93,10 @@ class ProfileScreen extends StatelessWidget {
               ),
             ),
             const SizedBox(height: 7),
-            const Material(
-              // FIX: Wrap Material for ListTile children
+            Material(
               color: Colors.transparent,
               child: _ProfileCard(
-                children: [
+                children: const [
                   _ProfileBadge(
                     icon: CupertinoIcons.star_fill,
                     title: "8 Logros culturales",
@@ -131,7 +130,6 @@ class ProfileScreen extends StatelessWidget {
             ),
             const SizedBox(height: 7),
             Material(
-              // FIX: Wrap Material for ListTile children
               color: Colors.transparent,
               child: _ProfileCard(
                 children: [
@@ -150,7 +148,7 @@ class ProfileScreen extends StatelessWidget {
                     icon: CupertinoIcons.settings,
                     color: primary,
                     text: "Configuración de la cuenta",
-                    trailing: const Icon(
+                    trailing: Icon(
                       CupertinoIcons.right_chevron,
                       color: Color(0xFFB0B0B0),
                       size: 20,
@@ -161,7 +159,7 @@ class ProfileScreen extends StatelessWidget {
                     icon: CupertinoIcons.lock,
                     color: primary,
                     text: "Cambiar contraseña",
-                    trailing: const Icon(
+                    trailing: Icon(
                       CupertinoIcons.right_chevron,
                       color: Color(0xFFB0B0B0),
                       size: 20,
@@ -172,7 +170,7 @@ class ProfileScreen extends StatelessWidget {
                     icon: CupertinoIcons.question_circle,
                     color: primary,
                     text: "Ayuda y soporte",
-                    trailing: const Icon(
+                    trailing: Icon(
                       CupertinoIcons.right_chevron,
                       color: Color(0xFFB0B0B0),
                       size: 20,
@@ -183,7 +181,7 @@ class ProfileScreen extends StatelessWidget {
                     icon: CupertinoIcons.arrow_right_square,
                     color: primary,
                     text: "Cerrar sesión",
-                    trailing: const Icon(
+                    trailing: Icon(
                       CupertinoIcons.right_chevron,
                       color: Color(0xFFB0B0B0),
                       size: 20,

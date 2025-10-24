@@ -1,3 +1,4 @@
+import 'dart:io';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
@@ -13,10 +14,14 @@ class TranslationScreen extends StatefulWidget {
 
 class _TranslationScreenState extends State<TranslationScreen> {
   final _controller = TextEditingController();
+
   String fromLang = 'Español';
-  String toLang = 'Inglés';
+  String toLang = 'Inglés'; // Por defecto
+  String detectedLang = '';
   String translatedText = '';
   bool loading = false;
+  List<String> ocrTranslations = [];
+  String ocrImagePath = '';
 
   final List<String> idiomas = ['Español', 'Inglés', 'Quechua'];
   final Map<String, String> flagEmoji = {
@@ -87,27 +92,22 @@ class _TranslationScreenState extends State<TranslationScreen> {
 
   Future<void> _translate([String? text]) async {
     final input = (text ?? _controller.text).trim();
+    if (input.isEmpty) return;
     setState(() {
+      loading = true;
       translatedText = '';
     });
-
-    if (input.isEmpty) return;
 
     final langToCode = {'Español': 'es', 'Inglés': 'en', 'Quechua': 'qu'};
     final fromCode = langToCode[fromLang]!;
     final toCode = langToCode[toLang]!;
 
-    setState(() => loading = true);
     try {
       final uri = Uri.parse('http://192.168.100.7:5000/api/translate');
       final response = await http.post(
         uri,
         headers: {'Content-Type': 'application/json'},
-        body: jsonEncode({
-          'text': input,
-          'source': fromCode, // <-- CAMBIO AQUÍ
-          'target': toCode, // <-- CAMBIO AQUÍ
-        }),
+        body: jsonEncode({'text': input, 'source': fromCode, 'target': toCode}),
       );
       if (response.statusCode == 200) {
         final data = json.decode(response.body);
@@ -131,56 +131,195 @@ class _TranslationScreenState extends State<TranslationScreen> {
   Future<void> _pickImageAndTranslate() async {
     final picker = ImagePicker();
     final pickedFile = await picker.pickImage(source: ImageSource.gallery);
-
     if (pickedFile == null) return;
 
-    setState(() => loading = true);
+    setState(() {
+      loading = true;
+      ocrTranslations = [];
+      detectedLang = '';
+      ocrImagePath = pickedFile.path;
+    });
+
+    final langToCode = {'Español': 'es', 'Inglés': 'en', 'Quechua': 'qu'};
+    final toCode = langToCode[toLang]!;
 
     try {
-      final uri = Uri.parse('http://192.168.100.7:5000/api/ocr-translate');
+      final uri = Uri.parse('http://192.168.100.7:5000/api/ocr/analyze');
       final request = http.MultipartRequest('POST', uri);
       request.files.add(
         await http.MultipartFile.fromPath('image', pickedFile.path),
       );
-      request.fields['source'] = fromLang == 'Español'
-          ? 'es'
-          : fromLang == 'Inglés'
-          ? 'en'
-          : 'qu';
-      request.fields['target'] = toLang == 'Español'
-          ? 'es'
-          : toLang == 'Inglés'
-          ? 'en'
-          : 'qu';
+      request.fields['targetLang'] = toCode;
 
       final response = await request.send();
       final respStr = await response.stream.bytesToString();
-
       if (response.statusCode == 200) {
         final data = json.decode(respStr);
         setState(() {
-          _controller.text = data['extractedText'] ?? '';
-          translatedText = data['translatedText'] ?? '';
+          ocrTranslations = (data['translations'] as List?)
+                  ?.map((e) => e.toString())
+                  .toList() ??
+              [];
+          detectedLang = data['detectedLang'] ?? '';
         });
       } else {
         setState(() {
-          translatedText = 'Error de traducción con imagen';
+          ocrTranslations = [];
+          detectedLang = '';
         });
       }
     } catch (e) {
       setState(() {
-        translatedText = 'Error de conexión';
+        ocrTranslations = [];
+        detectedLang = '';
       });
     } finally {
       setState(() => loading = false);
     }
   }
 
+  Widget _buildLangSwapRow() {
+    return Padding(
+      padding: const EdgeInsets.symmetric(vertical: 4),
+      child: Row(
+        mainAxisAlignment: MainAxisAlignment.center,
+        children: [
+          Expanded(
+            child: _LangDropdown(
+              value: fromLang,
+              items: idiomas,
+              flagEmoji: flagEmoji,
+              onChanged: (v) {
+                if (v == null || v == toLang) return;
+                setState(() => fromLang = v);
+              },
+            ),
+          ),
+          Container(
+            margin: const EdgeInsets.symmetric(horizontal: 8),
+            decoration: BoxDecoration(
+              color: const Color(0xFFFCE7E9),
+              borderRadius: BorderRadius.circular(13),
+            ),
+            child: CupertinoButton(
+              padding: const EdgeInsets.all(3),
+              onPressed: _swapLanguages,
+              child: const Icon(
+                CupertinoIcons.arrow_right_arrow_left,
+                color: Color(0xFFDA2C38),
+                size: 27,
+              ),
+            ),
+          ),
+          Expanded(
+            child: _LangDropdown(
+              value: toLang,
+              items: idiomas,
+              flagEmoji: flagEmoji,
+              onChanged: (v) {
+                if (v == null || v == fromLang) return;
+                setState(() => toLang = v);
+              },
+            ),
+          ),
+        ],
+      ),
+    );
+  }
+
+  Widget _buildOcrResults() {
+    if (ocrTranslations.isEmpty) return const SizedBox.shrink();
+    return Padding(
+      padding: const EdgeInsets.symmetric(vertical: 16.0),
+      child: Card(
+        elevation: 1,
+        shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(17)),
+        color: Colors.white,
+        child: Padding(
+          padding: const EdgeInsets.all(16.0),
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              if (ocrImagePath.isNotEmpty)
+                Center(
+                  child: ClipRRect(
+                    borderRadius: BorderRadius.circular(10),
+                    child: Image.file(
+                      File(ocrImagePath),
+                      height: 130,
+                      fit: BoxFit.cover,
+                    ),
+                  ),
+                ),
+              if (detectedLang.isNotEmpty) ...[
+                const SizedBox(height: 12),
+                Row(
+                  children: [
+                    const Icon(
+                      CupertinoIcons.globe,
+                      color: Color(0xFFDA2C38),
+                      size: 22,
+                    ),
+                    const SizedBox(width: 6),
+                    Text(
+                      "Detectado: $detectedLang",
+                      style: const TextStyle(
+                        fontWeight: FontWeight.bold,
+                        fontSize: 14,
+                        color: Color(0xFFDA2C38),
+                      ),
+                    ),
+                    const SizedBox(width: 12),
+                    const Icon(
+                      CupertinoIcons.arrow_right,
+                      color: Color(0xFFDA2C38),
+                      size: 18,
+                    ),
+                    const SizedBox(width: 7),
+                    Text(
+                      "Traducción: $toLang",
+                      style: const TextStyle(
+                        fontWeight: FontWeight.bold,
+                        fontSize: 14,
+                        color: Color(0xFFDA2C38),
+                      ),
+                    ),
+                  ],
+                ),
+              ],
+              const SizedBox(height: 10),
+              ...ocrTranslations.map(
+                (tr) => Container(
+                  margin: const EdgeInsets.only(bottom: 10),
+                  padding: const EdgeInsets.symmetric(
+                    vertical: 8,
+                    horizontal: 11,
+                  ),
+                  decoration: BoxDecoration(
+                    color: const Color(0xFFFCE7E9),
+                    borderRadius: BorderRadius.circular(12),
+                  ),
+                  child: Text(
+                    tr,
+                    style: const TextStyle(
+                      fontSize: 16,
+                      color: Color(0xFFDA2C38),
+                      fontWeight: FontWeight.bold,
+                    ),
+                  ),
+                ),
+              ),
+            ],
+          ),
+        ),
+      ),
+    );
+  }
+
   @override
   Widget build(BuildContext context) {
-    final double cardWidth = MediaQuery.of(context).size.width > 600
-        ? 520
-        : double.infinity;
+    final double cardWidth =
+        MediaQuery.of(context).size.width > 600 ? 520 : double.infinity;
     return CupertinoPageScaffold(
       backgroundColor: const Color(0xFFF8F7FA),
       navigationBar: const CupertinoNavigationBar(
@@ -199,36 +338,107 @@ class _TranslationScreenState extends State<TranslationScreen> {
             child: ListView(
               padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 18),
               children: [
-                MainCard(
-                  fromLang: fromLang,
-                  toLang: toLang,
-                  idiomas: idiomas,
-                  flagEmoji: flagEmoji,
-                  onFromChanged: (v) {
-                    if (v == null || v == toLang) return;
-                    setState(() => fromLang = v);
-                  },
-                  onToChanged: (v) {
-                    if (v == null || v == fromLang) return;
-                    setState(() => toLang = v);
-                  },
-                  swap: _swapLanguages,
-                  controller: _controller,
-                  translatedText: translatedText,
-                  loading: loading,
-                  onClear: () {
-                    _controller.clear();
-                    setState(() {
-                      translatedText = '';
-                    });
-                  },
-                  onChanged: (v) => setState(() {
-                    translatedText = '';
-                  }),
-                  onTranslate: () async => await _translate(),
-                  onPickImageAndTranslate: () async =>
-                      await _pickImageAndTranslate(),
+                _buildLangSwapRow(), // swap row
+                Card(
+                  elevation: 1,
+                  shape: RoundedRectangleBorder(
+                    borderRadius: BorderRadius.circular(17),
+                  ),
+                  color: Colors.white,
+                  child: Padding(
+                    padding: const EdgeInsets.all(16.0),
+                    child: Column(
+                      children: [
+                        CupertinoTextField(
+                          controller: _controller,
+                          minLines: 2,
+                          maxLines: 4,
+                          placeholder: "Escribe o pega texto aquí...",
+                          style: const TextStyle(fontSize: 18),
+                          padding: const EdgeInsets.symmetric(
+                            vertical: 12,
+                            horizontal: 14,
+                          ),
+                          decoration: BoxDecoration(
+                            color: const Color(0xFFF6F5FA),
+                            borderRadius: BorderRadius.circular(15),
+                          ),
+                          suffix: CupertinoButton(
+                            padding: EdgeInsets.zero,
+                            onPressed: () {
+                              _controller.clear();
+                              setState(() => translatedText = '');
+                            },
+                            child: const Icon(
+                              CupertinoIcons.clear_thick,
+                              color: Color(0xFFDA2C38),
+                            ),
+                          ),
+                          onChanged: (_) => setState(() => translatedText = ''),
+                        ),
+                        const SizedBox(height: 13),
+                        Container(
+                          alignment: Alignment.centerLeft,
+                          padding: const EdgeInsets.symmetric(
+                            horizontal: 14,
+                            vertical: 15,
+                          ),
+                          decoration: BoxDecoration(
+                            color: const Color(0xFFF6F5FA),
+                            borderRadius: BorderRadius.circular(15),
+                          ),
+                          child: loading
+                              ? const CupertinoActivityIndicator(radius: 15)
+                              : Text(
+                                  translatedText.isEmpty
+                                      ? "La traducción aparecerá aquí..."
+                                      : translatedText,
+                                  style: const TextStyle(
+                                    fontSize: 17,
+                                    color: Colors.black87,
+                                  ),
+                                ),
+                        ),
+                        const SizedBox(height: 20),
+                        Row(
+                          children: [
+                            Expanded(
+                              child: CupertinoButton.filled(
+                                borderRadius: BorderRadius.circular(16),
+                                padding: const EdgeInsets.symmetric(
+                                  vertical: 18,
+                                ),
+                                onPressed: loading ? null : () => _translate(),
+                                child: const Text(
+                                  'Traducir',
+                                  style: TextStyle(
+                                    fontWeight: FontWeight.w600,
+                                    fontSize: 18,
+                                    letterSpacing: 0.2,
+                                  ),
+                                ),
+                              ),
+                            ),
+                            const SizedBox(width: 14),
+                            CupertinoButton(
+                              padding: EdgeInsets.zero,
+                              borderRadius: BorderRadius.circular(16),
+                              color: const Color(0xFFFCE7E9),
+                              onPressed:
+                                  loading ? null : _pickImageAndTranslate,
+                              child: const Icon(
+                                CupertinoIcons.photo_on_rectangle,
+                                color: Color(0xFFDA2C38),
+                                size: 28,
+                              ),
+                            ),
+                          ],
+                        ),
+                      ],
+                    ),
+                  ),
                 ),
+                _buildOcrResults(),
                 const SizedBox(height: 26),
                 FrasesUtilesCard(
                   frasesUtiles: frasesUtiles,
@@ -250,165 +460,14 @@ class _TranslationScreenState extends State<TranslationScreen> {
   }
 }
 
-// ---- MAIN CARD ----
-class MainCard extends StatelessWidget {
-  final String fromLang, toLang;
-  final List<String> idiomas;
-  final Map<String, String> flagEmoji;
-  final void Function(String?) onFromChanged, onToChanged;
-  final VoidCallback swap, onClear, onTranslate, onPickImageAndTranslate;
-  final TextEditingController controller;
-  final String translatedText;
-  final void Function(String) onChanged;
-  final bool loading;
-
-  const MainCard({
-    super.key,
-    required this.fromLang,
-    required this.toLang,
-    required this.idiomas,
-    required this.flagEmoji,
-    required this.onFromChanged,
-    required this.onToChanged,
-    required this.swap,
-    required this.controller,
-    required this.translatedText,
-    required this.loading,
-    required this.onClear,
-    required this.onChanged,
-    required this.onTranslate,
-    required this.onPickImageAndTranslate,
-  });
-
-  @override
-  Widget build(BuildContext context) {
-    return CupertinoFormSection.insetGrouped(
-      backgroundColor: Colors.white,
-      margin: const EdgeInsets.symmetric(vertical: 0),
-      children: [
-        Padding(
-          padding: const EdgeInsets.only(bottom: 10),
-          child: Row(
-            children: [
-              Expanded(
-                child: CupertinoLangPicker(
-                  value: fromLang,
-                  items: idiomas,
-                  flagEmoji: flagEmoji,
-                  onChanged: onFromChanged,
-                ),
-              ),
-              Container(
-                margin: const EdgeInsets.symmetric(horizontal: 8),
-                decoration: BoxDecoration(
-                  color: const Color(0xFFFCE7E9),
-                  borderRadius: BorderRadius.circular(13),
-                ),
-                child: CupertinoButton(
-                  padding: EdgeInsets.zero,
-                  onPressed: swap,
-                  child: const Icon(
-                    CupertinoIcons.arrow_right_arrow_left,
-                    color: Color(0xFFDA2C38),
-                    size: 27,
-                  ),
-                ),
-              ),
-              Expanded(
-                child: CupertinoLangPicker(
-                  value: toLang,
-                  items: idiomas,
-                  flagEmoji: flagEmoji,
-                  onChanged: onToChanged,
-                ),
-              ),
-            ],
-          ),
-        ),
-        CupertinoTextField(
-          controller: controller,
-          minLines: 2,
-          maxLines: 4,
-          placeholder: "Escribe aquí...",
-          style: const TextStyle(fontSize: 18),
-          padding: const EdgeInsets.symmetric(vertical: 12, horizontal: 14),
-          decoration: BoxDecoration(
-            color: const Color(0xFFF6F5FA),
-            borderRadius: BorderRadius.circular(15),
-          ),
-          suffix: CupertinoButton(
-            padding: EdgeInsets.zero,
-            onPressed: onClear,
-            child: const Icon(
-              CupertinoIcons.clear_thick,
-              color: Color(0xFFDA2C38),
-            ),
-          ),
-          onChanged: onChanged,
-        ),
-        const SizedBox(height: 13),
-        Container(
-          alignment: Alignment.centerLeft,
-          padding: const EdgeInsets.symmetric(horizontal: 14, vertical: 15),
-          decoration: BoxDecoration(
-            color: const Color(0xFFF6F5FA),
-            borderRadius: BorderRadius.circular(15),
-          ),
-          child: loading
-              ? const CupertinoActivityIndicator(radius: 15)
-              : Text(
-                  translatedText.isEmpty
-                      ? "La traducción aparecerá aquí..."
-                      : translatedText,
-                  style: const TextStyle(fontSize: 17, color: Colors.black87),
-                ),
-        ),
-        const SizedBox(height: 20),
-        Row(
-          children: [
-            Expanded(
-              child: CupertinoButton.filled(
-                borderRadius: BorderRadius.circular(16),
-                padding: const EdgeInsets.symmetric(vertical: 18),
-                onPressed: loading ? null : onTranslate,
-                child: const Text(
-                  'Traducir',
-                  style: TextStyle(
-                    fontWeight: FontWeight.w600,
-                    fontSize: 18,
-                    letterSpacing: 0.2,
-                  ),
-                ),
-              ),
-            ),
-            const SizedBox(width: 14),
-            CupertinoButton(
-              padding: EdgeInsets.zero,
-              borderRadius: BorderRadius.circular(16),
-              color: const Color(0xFFFCE7E9),
-              onPressed: loading ? null : onPickImageAndTranslate,
-              child: const Icon(
-                CupertinoIcons.photo_on_rectangle,
-                color: Color(0xFFDA2C38),
-                size: 28,
-              ),
-            ),
-          ],
-        ),
-      ],
-    );
-  }
-}
-
-// ---- LANGUAGE PICKER ----
-class CupertinoLangPicker extends StatelessWidget {
+// ---- CUSTOM LANGUAGE DROPDOWN FOR SWAP DESIGN ----
+class _LangDropdown extends StatelessWidget {
   final String value;
   final List<String> items;
   final Map<String, String> flagEmoji;
   final void Function(String?) onChanged;
 
-  const CupertinoLangPicker({
-    super.key,
+  const _LangDropdown({
     required this.value,
     required this.items,
     required this.flagEmoji,
@@ -417,53 +476,51 @@ class CupertinoLangPicker extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Material(
-      color: Colors.transparent,
-      child: Container(
-        padding: const EdgeInsets.symmetric(horizontal: 7),
-        decoration: BoxDecoration(
-          color: const Color(0xFFF6F5FA),
+    return Container(
+      height: 44,
+      margin: const EdgeInsets.symmetric(vertical: 2),
+      decoration: BoxDecoration(
+        borderRadius: BorderRadius.circular(13),
+        border: Border.all(color: const Color(0xFFFCE7E9), width: 1.7),
+        color: Colors.white,
+      ),
+      child: DropdownButtonHideUnderline(
+        child: DropdownButton<String>(
+          value: value,
           borderRadius: BorderRadius.circular(13),
-          border: Border.all(color: const Color(0xFFF6C8D0), width: 1.2),
-        ),
-        child: DropdownButtonHideUnderline(
-          child: DropdownButton<String>(
-            value: value,
-            borderRadius: BorderRadius.circular(15),
-            isExpanded: true,
-            style: const TextStyle(
-              fontSize: 17,
-              color: Color(0xFF222222),
-              fontWeight: FontWeight.w600,
-            ),
-            icon: const Icon(
-              CupertinoIcons.chevron_down,
-              color: Color(0xFFDA2C38),
-            ),
-            onChanged: onChanged,
-            dropdownColor: Colors.white,
-            items: items.map((lang) {
-              return DropdownMenuItem<String>(
-                value: lang,
-                child: Row(
-                  children: [
-                    Text(
-                      flagEmoji[lang] ?? '',
-                      style: const TextStyle(fontSize: 20),
-                    ),
-                    const SizedBox(width: 7),
-                    Text(
-                      lang,
-                      style: const TextStyle(
-                        fontSize: 16,
-                        fontWeight: FontWeight.w600,
-                      ),
-                    ),
-                  ],
-                ),
-              );
-            }).toList(),
+          isExpanded: true,
+          style: const TextStyle(
+            fontSize: 17,
+            color: Color(0xFF222222),
+            fontWeight: FontWeight.w600,
           ),
+          icon: const Icon(
+            CupertinoIcons.chevron_down,
+            color: Color(0xFFDA2C38),
+          ),
+          onChanged: onChanged,
+          dropdownColor: Colors.white,
+          items: items.map((lang) {
+            return DropdownMenuItem<String>(
+              value: lang,
+              child: Row(
+                children: [
+                  Text(
+                    flagEmoji[lang] ?? '',
+                    style: const TextStyle(fontSize: 22),
+                  ),
+                  const SizedBox(width: 8),
+                  Text(
+                    lang,
+                    style: const TextStyle(
+                      fontSize: 16,
+                      fontWeight: FontWeight.bold,
+                    ),
+                  ),
+                ],
+              ),
+            );
+          }).toList(),
         ),
       ),
     );
