@@ -83,6 +83,21 @@ class _ExploreScreenState extends State<ExploreScreen> {
     fetchSites(query: text);
   }
 
+  // Abre el link de Google Maps directo, mostrando mensaje si falla
+  Future<void> openMapsUrl(BuildContext context, String url) async {
+    final uri = Uri.parse(url);
+    if (await canLaunchUrl(uri)) {
+      await launchUrl(uri, mode: LaunchMode.externalApplication);
+    } else {
+      ScaffoldMessenger.of(context).showSnackBar(
+        const SnackBar(
+          content: Text("No se pudo abrir Google Maps ni el navegador."),
+          backgroundColor: Colors.red,
+        ),
+      );
+    }
+  }
+
   @override
   Widget build(BuildContext context) {
     const bg = Color(0xFFF8F7FA);
@@ -119,6 +134,7 @@ class _ExploreScreenState extends State<ExploreScreen> {
                                     selectedSite = idx;
                                     selectedLang = 'es';
                                   }),
+                                  onMapsTap: (url) => openMapsUrl(context, url),
                                 ),
                               ),
                             ],
@@ -129,6 +145,7 @@ class _ExploreScreenState extends State<ExploreScreen> {
                             onLangTap: (lang) =>
                                 setState(() => selectedLang = lang),
                             onBack: () => setState(() => selectedSite = null),
+                            onMapsTap: (url) => openMapsUrl(context, url),
                           ),
           ),
         ),
@@ -163,7 +180,12 @@ class _SearchBar extends StatelessWidget {
 class _OverviewSection extends StatelessWidget {
   final List<dynamic> sites;
   final void Function(int) onTap;
-  const _OverviewSection({required this.sites, required this.onTap});
+  final void Function(String url) onMapsTap;
+  const _OverviewSection({
+    required this.sites,
+    required this.onTap,
+    required this.onMapsTap,
+  });
 
   @override
   Widget build(BuildContext context) {
@@ -184,7 +206,6 @@ class _OverviewSection extends StatelessWidget {
               borderRadius: BorderRadius.circular(18),
               boxShadow: [
                 BoxShadow(
-                  // ignore: deprecated_member_use
                   color: Colors.black.withOpacity(0.05),
                   blurRadius: 8,
                   offset: const Offset(0, 3),
@@ -266,18 +287,13 @@ class _OverviewSection extends StatelessWidget {
                         Align(
                           alignment: Alignment.centerRight,
                           child: CupertinoButton(
-                            onPressed: () async {
-                              final url = site['location']['googleMapsUrl'];
-                              if (await canLaunchUrl(Uri.parse(url))) {
-                                await launchUrl(Uri.parse(url),
-                                    mode: LaunchMode.externalApplication);
-                              }
-                            },
+                            onPressed: () =>
+                                onMapsTap(site['location']['googleMapsUrl']),
                             padding: const EdgeInsets.symmetric(
                                 horizontal: 18, vertical: 7),
                             color: const Color(0xFF8559DA),
                             borderRadius: BorderRadius.circular(15),
-                            minimumSize: Size(36, 36),
+                            minSize: 36,
                             child: const Row(
                               mainAxisSize: MainAxisSize.min,
                               children: [
@@ -313,11 +329,13 @@ class _SiteDetailSection extends StatelessWidget {
   final String selectedLang;
   final void Function(String) onLangTap;
   final VoidCallback onBack;
+  final void Function(String url) onMapsTap;
   const _SiteDetailSection({
     required this.site,
     required this.selectedLang,
     required this.onLangTap,
     required this.onBack,
+    required this.onMapsTap,
   });
 
   @override
@@ -452,13 +470,8 @@ class _SiteDetailSection extends StatelessWidget {
                           borderRadius: BorderRadius.circular(15),
                           color: const Color(0xFF8559DA),
                           padding: const EdgeInsets.symmetric(vertical: 13),
-                          onPressed: () async {
-                            final url = site['location']['googleMapsUrl'];
-                            if (await canLaunchUrl(Uri.parse(url))) {
-                              await launchUrl(Uri.parse(url),
-                                  mode: LaunchMode.externalApplication);
-                            }
-                          },
+                          onPressed: () =>
+                              onMapsTap(site['location']['googleMapsUrl']),
                           child: const Row(
                             mainAxisSize: MainAxisSize.min,
                             children: [
@@ -532,7 +545,6 @@ class _LangSelector extends StatelessWidget {
                 boxShadow: isSelected
                     ? [
                         BoxShadow(
-                          // ignore: deprecated_member_use
                           color: const Color(0xFFDA2C38).withOpacity(0.12),
                           blurRadius: 10,
                         )
