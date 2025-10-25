@@ -1,6 +1,7 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_gen/gen_l10n/app_localizations.dart';
+// Corrige la import de localización para tu estructura: apunta a lib/l10n/app_localizations.dart
+import '../../l10n/app_localizations.dart';
 import 'package:provider/provider.dart';
 import '../providers/locale_provider.dart';
 
@@ -34,7 +35,7 @@ class ProfileScreen extends StatelessWidget {
                 const Text('Español'),
                 if (currentLang == 'es') ...[
                   const SizedBox(width: 8),
-                  const Icon(CupertinoIcons.checkmark_alt, 
+                  const Icon(CupertinoIcons.checkmark_alt,
                       color: Color(0xFFDA2C38), size: 20),
                 ],
               ],
@@ -53,7 +54,7 @@ class ProfileScreen extends StatelessWidget {
                 const Text('English'),
                 if (currentLang == 'en') ...[
                   const SizedBox(width: 8),
-                  const Icon(CupertinoIcons.checkmark_alt, 
+                  const Icon(CupertinoIcons.checkmark_alt,
                       color: Color(0xFFDA2C38), size: 20),
                 ],
               ],
@@ -72,7 +73,7 @@ class ProfileScreen extends StatelessWidget {
                 const Text('Quechua'),
                 if (currentLang == 'qu') ...[
                   const SizedBox(width: 8),
-                  const Icon(CupertinoIcons.checkmark_alt, 
+                  const Icon(CupertinoIcons.checkmark_alt,
                       color: Color(0xFFDA2C38), size: 20),
                 ],
               ],
@@ -225,11 +226,12 @@ class ProfileScreen extends StatelessWidget {
                       children: [
                         Consumer<LocaleProvider>(
                           builder: (context, localeProvider, child) {
-                            final currentLang = localeProvider.locale.languageCode;
-                            final langName = currentLang == 'es' 
-                                ? 'Español' 
-                                : currentLang == 'en' 
-                                    ? 'English' 
+                            final currentLang =
+                                localeProvider.locale.languageCode;
+                            final langName = currentLang == 'es'
+                                ? 'Español'
+                                : currentLang == 'en'
+                                    ? 'English'
                                     : 'Quechua';
                             return Text(
                               langName,
@@ -387,8 +389,7 @@ class _ProfileBadge extends StatelessWidget {
     return ListTile(
       leading: Container(
         decoration: BoxDecoration(
-          // ignore: deprecated_member_use
-          color: color.withOpacity(0.11),
+          color: color.withOpacity(0.11), // <-- .withOpacity está bien aquí
           shape: BoxShape.circle,
         ),
         padding: const EdgeInsets.all(10),

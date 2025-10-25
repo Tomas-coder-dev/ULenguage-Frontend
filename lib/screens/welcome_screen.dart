@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_gen/gen_l10n/app_localizations.dart';
+// Corrige la import de localización para tu estructura de archivos:
+import '../../l10n/app_localizations.dart';
 import 'login_screen.dart';
 
 class WelcomeScreen extends StatelessWidget {

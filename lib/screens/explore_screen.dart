@@ -1,5 +1,10 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_gen/gen_l10n/app_localizations.dart';
+// Usa la import que corresponde a tu configuración.
+// Si tus archivos generados están en lib/l10n/:
+import '../../l10n/app_localizations.dart';
+// Si usas la configuración estándar de Flutter gen-l10n, sería:
+// import 'package:flutter_gen/gen_l10n/app_localizations.dart';
+
 import 'package:flutter/cupertino.dart';
 import 'dart:convert';
 import 'package:http/http.dart' as http;
@@ -9,9 +14,9 @@ import 'package:url_launcher/url_launcher.dart';
 String prettyCategory(String? category) {
   if (category == null) return "Lugar turístico";
   return category.replaceAll("_", " ").replaceFirstMapped(
-    RegExp(r'^[a-z]'),
-    (m) => m[0]!.toUpperCase(),
-  );
+        RegExp(r'^[a-z]'),
+        (m) => m[0]!.toUpperCase(),
+      );
 }
 
 class ExploreScreen extends StatefulWidget {
@@ -89,7 +94,7 @@ class _ExploreScreenState extends State<ExploreScreen> {
     final uri = Uri.parse(url);
     if (await canLaunchUrl(uri)) {
       await launchUrl(uri, mode: LaunchMode.externalApplication);
-    } else {
+    } else if (mounted) {
       ScaffoldMessenger.of(context).showSnackBar(
         const SnackBar(
           content: Text("No se pudo abrir Google Maps ni el navegador."),
@@ -108,7 +113,8 @@ class _ExploreScreenState extends State<ExploreScreen> {
       navigationBar: CupertinoNavigationBar(
         middle: Text(
           l10n.explore,
-          style: const TextStyle(color: Colors.white, fontWeight: FontWeight.bold),
+          style:
+              const TextStyle(color: Colors.white, fontWeight: FontWeight.bold),
         ),
         backgroundColor: const Color(0xFFDA2C38),
         border: null,
@@ -295,7 +301,7 @@ class _OverviewSection extends StatelessWidget {
                                 horizontal: 18, vertical: 7),
                             color: const Color(0xFF8559DA),
                             borderRadius: BorderRadius.circular(15),
-                            minSize: 36,
+                            minimumSize: const Size(36, 36),
                             child: const Row(
                               mainAxisSize: MainAxisSize.min,
                               children: [

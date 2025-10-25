@@ -1,7 +1,12 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_localizations/flutter_localizations.dart';
 import 'package:provider/provider.dart';
-import 'package:flutter_gen/gen_l10n/app_localizations.dart';
+// Usa el import correcto según TU configuración.
+// Si usas l10n.yaml y los archivos generados están en lib/l10n/, usa:
+import 'l10n/app_localizations.dart';
+// Si usas la configuración estándar (flutter gen-l10n), usa:
+// import 'package:flutter_gen/gen_l10n/app_localizations.dart';
+
 import 'providers/user_provider.dart';
 import 'providers/locale_provider.dart';
 import 'screens/welcome_screen.dart';
@@ -40,7 +45,7 @@ class ULenguageApp extends StatelessWidget {
             Locale('en'), // Inglés
             Locale('qu'), // Quechua
           ],
-          localizationsDelegates: const [
+          localizationsDelegates: [
             AppLocalizations.delegate,
             GlobalMaterialLocalizations.delegate,
             GlobalWidgetsLocalizations.delegate,

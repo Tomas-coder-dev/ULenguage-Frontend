@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
-import 'package:flutter_gen/gen_l10n/app_localizations.dart';
+// Corrige la import para tu estructura de localización:
+import '../../l10n/app_localizations.dart';
 import '../providers/locale_provider.dart';
 
 class LanguageSelector extends StatelessWidget {
@@ -14,7 +15,8 @@ class LanguageSelector extends StatelessWidget {
     return ListTile(
       leading: const Icon(Icons.language),
       title: Text(l10n.language),
-      subtitle: Text(_getLanguageName(localeProvider.locale.languageCode, l10n)),
+      subtitle:
+          Text(_getLanguageName(localeProvider.locale.languageCode, l10n)),
       trailing: const Icon(Icons.arrow_forward_ios, size: 16),
       onTap: () {
         _showLanguageDialog(context, localeProvider, l10n);
@@ -87,7 +89,8 @@ class LanguageSelector extends StatelessWidget {
     String name,
     String flag,
   ) {
-    final isSelected = localeProvider.locale.languageCode == locale.languageCode;
+    final isSelected =
+        localeProvider.locale.languageCode == locale.languageCode;
 
     return RadioListTile<Locale>(
       value: locale,

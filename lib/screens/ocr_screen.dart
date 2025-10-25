@@ -4,7 +4,8 @@ import 'package:flutter/cupertino.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:http/http.dart' as http;
 import 'dart:convert';
-import 'package:flutter_gen/gen_l10n/app_localizations.dart';
+// Usa la import correcta para tu estructura (desde lib/screens hacia lib/l10n)
+import '../../l10n/app_localizations.dart';
 
 // Modelo de objeto detectado
 class OcrObject {
@@ -138,7 +139,6 @@ class _OcrScreenState extends State<OcrScreen> {
     final accent = const Color(0xFFDA2C38);
     final softRed = const Color(0xFFFCE7E9);
     final bgColor = const Color(0xFFF8F7FA);
-    final l10n = AppLocalizations.of(context)!;
 
     return Scaffold(
       backgroundColor: bgColor,
@@ -460,7 +460,6 @@ class _OcrScreenState extends State<OcrScreen> {
               style: TextStyle(
                 fontWeight: FontWeight.w500,
                 fontSize: 16,
-                // ignore: deprecated_member_use
                 color: accent.withOpacity(0.65),
                 letterSpacing: 0.1,
               ),

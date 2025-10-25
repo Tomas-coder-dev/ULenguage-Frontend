@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_gen/gen_l10n/app_localizations.dart';
+// Corrige la import para tu estructura:
+import '../../l10n/app_localizations.dart';
 
 class Navbar extends StatelessWidget {
   final int currentIndex;

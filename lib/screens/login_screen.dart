@@ -1,7 +1,10 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
-import 'package:flutter_gen/gen_l10n/app_localizations.dart';
+// Corrige la import para tu estructura: apunta a tu archivo generado real.
+// Si el archivo está en lib/l10n/app_localizations.dart, desde lib/screens haz:
+import '../../l10n/app_localizations.dart';
+
 import '../services/auth_service.dart';
 import '../providers/user_provider.dart';
 import 'main_shell.dart';
