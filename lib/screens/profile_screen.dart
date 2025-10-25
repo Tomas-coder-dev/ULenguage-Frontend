@@ -1,9 +1,92 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
+import 'package:provider/provider.dart';
+import '../providers/locale_provider.dart';
 
 class ProfileScreen extends StatelessWidget {
   const ProfileScreen({super.key});
+
+  void _showLanguageSelector(BuildContext context) {
+    final localeProvider = Provider.of<LocaleProvider>(context, listen: false);
+    final currentLang = localeProvider.locale.languageCode;
+    final l10n = AppLocalizations.of(context)!;
+
+    showCupertinoModalPopup(
+      context: context,
+      builder: (BuildContext context) => CupertinoActionSheet(
+        title: Text(
+          l10n.selectLanguage,
+          style: const TextStyle(fontSize: 18, fontWeight: FontWeight.w600),
+        ),
+        message: const Text('Elige tu idioma preferido para la aplicación'),
+        actions: [
+          CupertinoActionSheetAction(
+            onPressed: () {
+              localeProvider.setLocale(const Locale('es'));
+              Navigator.pop(context);
+            },
+            child: Row(
+              mainAxisAlignment: MainAxisAlignment.center,
+              children: [
+                const Text('🇪🇸', style: TextStyle(fontSize: 24)),
+                const SizedBox(width: 12),
+                const Text('Español'),
+                if (currentLang == 'es') ...[
+                  const SizedBox(width: 8),
+                  const Icon(CupertinoIcons.checkmark_alt, 
+                      color: Color(0xFFDA2C38), size: 20),
+                ],
+              ],
+            ),
+          ),
+          CupertinoActionSheetAction(
+            onPressed: () {
+              localeProvider.setLocale(const Locale('en'));
+              Navigator.pop(context);
+            },
+            child: Row(
+              mainAxisAlignment: MainAxisAlignment.center,
+              children: [
+                const Text('🇺🇸', style: TextStyle(fontSize: 24)),
+                const SizedBox(width: 12),
+                const Text('English'),
+                if (currentLang == 'en') ...[
+                  const SizedBox(width: 8),
+                  const Icon(CupertinoIcons.checkmark_alt, 
+                      color: Color(0xFFDA2C38), size: 20),
+                ],
+              ],
+            ),
+          ),
+          CupertinoActionSheetAction(
+            onPressed: () {
+              localeProvider.setLocale(const Locale('qu'));
+              Navigator.pop(context);
+            },
+            child: Row(
+              mainAxisAlignment: MainAxisAlignment.center,
+              children: [
+                const Text('🦙', style: TextStyle(fontSize: 24)),
+                const SizedBox(width: 12),
+                const Text('Quechua'),
+                if (currentLang == 'qu') ...[
+                  const SizedBox(width: 8),
+                  const Icon(CupertinoIcons.checkmark_alt, 
+                      color: Color(0xFFDA2C38), size: 20),
+                ],
+              ],
+            ),
+          ),
+        ],
+        cancelButton: CupertinoActionSheetAction(
+          isDefaultAction: true,
+          onPressed: () => Navigator.pop(context),
+          child: const Text('Cancelar'),
+        ),
+      ),
+    );
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -133,6 +216,41 @@ class ProfileScreen extends StatelessWidget {
               color: Colors.transparent,
               child: _ProfileCard(
                 children: [
+                  _ProfileOptionTile(
+                    icon: CupertinoIcons.globe,
+                    color: primary,
+                    text: l10n.language,
+                    trailing: Row(
+                      mainAxisSize: MainAxisSize.min,
+                      children: [
+                        Consumer<LocaleProvider>(
+                          builder: (context, localeProvider, child) {
+                            final currentLang = localeProvider.locale.languageCode;
+                            final langName = currentLang == 'es' 
+                                ? 'Español' 
+                                : currentLang == 'en' 
+                                    ? 'English' 
+                                    : 'Quechua';
+                            return Text(
+                              langName,
+                              style: const TextStyle(
+                                fontSize: 15,
+                                color: Color(0xFF888888),
+                                fontWeight: FontWeight.w500,
+                              ),
+                            );
+                          },
+                        ),
+                        const SizedBox(width: 8),
+                        const Icon(
+                          CupertinoIcons.right_chevron,
+                          color: Color(0xFFB0B0B0),
+                          size: 20,
+                        ),
+                      ],
+                    ),
+                    onTap: () => _showLanguageSelector(context),
+                  ),
                   _ProfileOptionTile(
                     icon: CupertinoIcons.bell_fill,
                     color: primary,
