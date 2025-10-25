@@ -204,12 +204,14 @@ class _OverviewSection extends StatelessWidget {
               final idx = entry.key;
               final site = entry.value;
               String type = site['type'];
-              if (type == 'Montaña') type = l10n.mountain;
-              else if (type == 'Ciudad') type = l10n.city;
+              if (type == 'Montaña') {
+                type = l10n.mountain;
+              } else if (type == 'Ciudad') type = l10n.city;
               else if (type == 'Ruta Cultural') type = l10n.culturalRoute;
               String difficulty = site['difficulty'];
-              if (difficulty == 'Fácil') difficulty = l10n.easy;
-              else if (difficulty == 'Media') difficulty = l10n.medium;
+              if (difficulty == 'Fácil') {
+                difficulty = l10n.easy;
+              } else if (difficulty == 'Media') difficulty = l10n.medium;
               else if (difficulty == 'Difícil') difficulty = l10n.hard;
               return CupertinoButton(
                 padding: EdgeInsets.zero,
@@ -330,12 +332,14 @@ class _SiteDetailSection extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     String type = site['type'];
-    if (type == 'Montaña') type = l10n.mountain;
-    else if (type == 'Ciudad') type = l10n.city;
+    if (type == 'Montaña') {
+      type = l10n.mountain;
+    } else if (type == 'Ciudad') type = l10n.city;
     else if (type == 'Ruta Cultural') type = l10n.culturalRoute;
     String difficulty = site['difficulty'];
-    if (difficulty == 'Fácil') difficulty = l10n.easy;
-    else if (difficulty == 'Media') difficulty = l10n.medium;
+    if (difficulty == 'Fácil') {
+      difficulty = l10n.easy;
+    } else if (difficulty == 'Media') difficulty = l10n.medium;
     else if (difficulty == 'Difícil') difficulty = l10n.hard;
     return Container(
       decoration: BoxDecoration(

@@ -1,26 +1,43 @@
 {
   "project_info": {
-    "project_number": "888679467711",
-    "project_id": "ulenguage-app",
-    "storage_bucket": "ulenguage-app.firebasestorage.app"
+    "project_number": "250811921383",
+    "project_id": "ulenguage",
+    "storage_bucket": "ulenguage.firebasestorage.app"
   },
   "client": [
     {
       "client_info": {
-        "mobilesdk_app_id": "1:888679467711:android:ddb12c8aba9828643c940a",
+        "mobilesdk_app_id": "1:250811921383:android:98bf58c7b2f785d5028342",
         "android_client_info": {
-          "package_name": "com.example.ulenguage_app_n"
+          "package_name": "ulenguage.tesis"
         }
       },
-      "oauth_client": [],
+      "oauth_client": [
+        {
+          "client_id": "250811921383-lk8t60vfumnfa6od44kbe4lm9bjkoj5n.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
       "api_key": [
         {
-          "current_key": "AIzaSyC45p-st-KIZG-WKB0KW6Jz546kj1wltbM"
+          "current_key": "AIzaSyBzWrjT8pxL_yRjfURIaazi3SqBElc_oIY"
         }
       ],
       "services": {
         "appinvite_service": {
-          "other_platform_oauth_client": []
+          "other_platform_oauth_client": [
+            {
+              "client_id": "250811921383-lk8t60vfumnfa6od44kbe4lm9bjkoj5n.apps.googleusercontent.com",
+              "client_type": 3
+            },
+            {
+              "client_id": "250811921383-cbsingbvqsgprahlkngakltkasm18ibk.apps.googleusercontent.com",
+              "client_type": 2,
+              "ios_info": {
+                "bundle_id": "com.example.ulenguageProyecto"
+              }
+            }
+          ]
         }
       }
     }
