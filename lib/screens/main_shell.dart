@@ -27,19 +27,13 @@ class _MainShellState extends State<MainShell> {
   Widget build(BuildContext context) {
     return Scaffold(
       backgroundColor: const Color(0xFFF8F7FA),
-      body: Stack(
-        children: [
-          Positioned.fill(
-            child: IndexedStack(index: _currentIndex, children: _screens),
-          ),
-          Align(
-            alignment: Alignment.bottomCenter,
-            child: Navbar(
-              currentIndex: _currentIndex,
-              onTap: (i) => setState(() => _currentIndex = i),
-            ),
-          ),
-        ],
+      body: IndexedStack(
+        index: _currentIndex,
+        children: _screens,
+      ),
+      bottomNavigationBar: Navbar(
+        currentIndex: _currentIndex,
+        onTap: (i) => setState(() => _currentIndex = i),
       ),
     );
   }

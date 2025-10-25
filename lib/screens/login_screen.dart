@@ -4,7 +4,7 @@ import 'package:provider/provider.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 import '../services/auth_service.dart';
 import '../providers/user_provider.dart';
-import 'home_screen.dart';
+import 'main_shell.dart';
 
 class LoginScreen extends StatefulWidget {
   const LoginScreen({super.key});
@@ -19,23 +19,23 @@ class _LoginScreenState extends State<LoginScreen> {
 
   Future<void> _handleGoogleSignIn() async {
     setState(() => loading = true);
-    
+
     try {
       final result = await _authService.signInWithGoogle();
-      
+
       if (!mounted) return;
-      
+
       if (result['success']) {
         // Guardar usuario en el Provider
         final userProvider = Provider.of<UserProvider>(context, listen: false);
         userProvider.setUser(result['user']);
-        
-        // Login exitoso, navegar a home
+
+        // Login exitoso, navegar a MainShell
         Navigator.pushReplacement(
           context,
-          CupertinoPageRoute(builder: (context) => const HomeScreen()),
+          CupertinoPageRoute(builder: (context) => const MainShell()),
         );
-        
+
         // Mostrar mensaje de bienvenida
         ScaffoldMessenger.of(context).showSnackBar(
           SnackBar(
@@ -81,7 +81,7 @@ class _LoginScreenState extends State<LoginScreen> {
     if (!mounted) return;
     Navigator.pushReplacement(
       context,
-      CupertinoPageRoute(builder: (context) => const HomeScreen()),
+      CupertinoPageRoute(builder: (context) => const MainShell()),
     );
   }
 

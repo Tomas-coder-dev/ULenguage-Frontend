@@ -23,6 +23,7 @@ dependencies:
   connectivity_plus: ^7.0.0
   firebase_auth: ^6.1.0              # Actualizado a versión compatible
   shared_preferences: ^2.2.2
+  url_launcher: ^6.2.6               # <--- AGREGADO para abrir enlaces/maps
 
 dev_dependencies:
   flutter_test:

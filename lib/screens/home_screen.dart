@@ -1,22 +1,10 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
-import '../widgets/navbar_temp.dart';
-import 'translation_screen.dart';
-import 'ocr_screen.dart';
-import 'explore_screen.dart';
-import 'profile_screen.dart';
 
-class HomeScreen extends StatefulWidget {
+class HomeScreen extends StatelessWidget {
   const HomeScreen({super.key});
 
-  @override
-  State<HomeScreen> createState() => _HomeScreenState();
-}
-
-class _HomeScreenState extends State<HomeScreen> {
   final String nombreUsuario = "Fabricio Aylas";
-  int _currentIndex = 0;
-
   static const double progreso = 0.75;
 
   List<Map<String, dynamic>> paquetesLocales(BuildContext context) {
@@ -33,38 +21,6 @@ class _HomeScreenState extends State<HomeScreen> {
         "instalado": false,
       },
     ];
-  }
-
-  void _onNavBarTap(int i) {
-    setState(() => _currentIndex = i);
-    switch (i) {
-      case 0:
-        break;
-      case 1:
-        Navigator.push(
-          context,
-          MaterialPageRoute(builder: (context) => const TranslationScreen()),
-        );
-        break;
-      case 2:
-        Navigator.push(
-          context,
-          MaterialPageRoute(builder: (context) => const OcrScreen()),
-        );
-        break;
-      case 3:
-        Navigator.push(
-          context,
-          MaterialPageRoute(builder: (context) => const ExploreScreen()),
-        );
-        break;
-      case 4:
-        Navigator.push(
-          context,
-          MaterialPageRoute(builder: (context) => const ProfileScreen()),
-        );
-        break;
-    }
   }
 
   @override
@@ -327,10 +283,7 @@ class _HomeScreenState extends State<HomeScreen> {
           ),
         ),
       ),
-      bottomNavigationBar: Navbar(
-        currentIndex: _currentIndex,
-        onTap: _onNavBarTap,
-      ),
+      // bottomNavigationBar: Navbar(...) <-- ¡ELIMINADO!
     );
   }
 }
@@ -406,15 +359,13 @@ class _PaqueteListTile extends StatelessWidget {
           style: const TextStyle(color: Colors.black54, fontSize: 13),
         ),
         trailing: CircleAvatar(
-          backgroundColor: instalado
-              ? const Color(0xFFE5F7EC)
-              : const Color(0xFFFFEBEE),
+          backgroundColor:
+              instalado ? const Color(0xFFE5F7EC) : const Color(0xFFFFEBEE),
           radius: 17,
           child: Icon(
             instalado ? Icons.check_circle : Icons.download_rounded,
-            color: instalado
-                ? const Color(0xFF47B881)
-                : const Color(0xFFDA2C38),
+            color:
+                instalado ? const Color(0xFF47B881) : const Color(0xFFDA2C38),
             size: 23,
           ),
         ),
