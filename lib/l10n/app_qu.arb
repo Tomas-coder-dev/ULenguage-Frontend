@@ -21,6 +21,96 @@
   "ocrTranslation": "T'ikray",
   "ocrBack": "Kutiy",
   "ocrBoundingBox": "Bounding Box:",
+  "@ocrBoundingBox": {
+    "description": "Etiqueta para el bounding box en OCR"
+  },
+  
+  "scanning": "Qillqaykuy...",
+  "@scanning": {
+    "description": "Mensaje mostrado durante el escaneo OCR"
+  },
+  
+  "scanAndSelectLang": "Qillqay ima imaymana yachay willaykunata maskaypaq.",
+  "@scanAndSelectLang": {
+    "description": "Mensaje de instrucción para escanear imagen"
+  },
+  
+  "gallery": "Rikuykuna",
+  "@gallery": {
+    "description": "Botón para seleccionar imagen de galería"
+  },
+  
+  "photo": "Foto",
+  "@photo": {
+    "description": "Botón para tomar foto con cámara"
+  },
+  
+  "noObjectsDetected": "Mana imaymana maskasqachu.",
+  "@noObjectsDetected": {
+    "description": "Mensaje cuando no se detectan objetos en la imagen"
+  },
+  
+  "newScan": "Musuq qillqaykuy",
+  "@newScan": {
+    "description": "Botón para iniciar un nuevo escaneo"
+  },
+  
+  "culturalScan": "Yachay qillqaykuy",
+  "@culturalScan": {
+    "description": "Título de la pantalla de detalle del escaneo cultural"
+  },
+  
+  "detectedLang": "Simi tarikusqa: {lang}",
+  "@detectedLang": {
+    "description": "Muestra el idioma detectado en la imagen",
+    "placeholders": {
+      "lang": {
+        "type": "String",
+        "example": "Español"
+      }
+    }
+  },
+  
+  "culturalAnalysis": "Yachaypa willay",
+  "@culturalAnalysis": {
+    "description": "Título de la sección de análisis cultural"
+  },
+  
+  "identification": "Riqsiy",
+  "@identification": {
+    "description": "Etiqueta para la sección de identificación del objeto"
+  },
+  
+  "culturalExplanation": "Yachay sut'inchay",
+  "@culturalExplanation": {
+    "description": "Etiqueta para la sección de explicación cultural"
+  },
+  
+  "translation": "T'ikray",
+  "@translation": {
+    "description": "Etiqueta para la sección de traducción"
+  },
+  
+  "errorOpenMaps": "Mana Google Maps chaymanta navegador kichayta atinichu.",
+  "@errorOpenMaps": {
+    "description": "Mensaje de error cuando no se puede abrir Google Maps"
+  },
+  
+  "searchSitesPlaceholder": "Llaqtakunata, ñankunata maskay...",
+  "@searchSitesPlaceholder": {
+    "description": "Placeholder para el campo de búsqueda de sitios"
+  },
+  
+  "back": "Kutiy",
+  "@back": {
+    "description": "Botón para volver atrás"
+  },
+  
+  "choosePreferredLanguage": "Akllakuy imayna simita munasqayki aplicacionpaq",
+  "@choosePreferredLanguage": {
+    "description": "Mensaje para seleccionar idioma preferido"
+  },
+  
   "explore": "Maskay",
   "discoverAndean": "Andes llaqtakunata maskay",
   "searchSites": "Llaqtakunata, ñankunata maskay...",

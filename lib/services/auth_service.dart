@@ -2,11 +2,13 @@ import 'dart:convert';
 import 'package:google_sign_in/google_sign_in.dart';
 import 'package:http/http.dart' as http;
 import 'package:flutter/foundation.dart';
-import '../config/app_config.dart';
+import '../config/api_config.dart';
+import 'secure_storage_service.dart';
 
 class AuthService {
   // Configura Google Sign-In para Android y Web
   final GoogleSignIn _googleSignIn = GoogleSignIn(
+    clientId: ApiConfig.googleClientId,
     scopes: <String>[
       'email',
       'https://www.googleapis.com/auth/userinfo.profile',
@@ -40,17 +42,32 @@ class AuthService {
 
       // 4. Envía el idToken al backend para autenticación
       final response = await http.post(
-        Uri.parse('${AppConfig.authUrl}/google'),
-        headers: {'Content-Type': 'application/json'},
+        Uri.parse('${ApiConfig.authLogin}/google'),
+        headers: ApiConfig.commonHeaders,
         body: jsonEncode({
           'idToken': idToken,
         }),
-      );
+      ).timeout(ApiConfig.requestTimeout);
 
       if (response.statusCode == 200 || response.statusCode == 201) {
         final data = jsonDecode(response.body);
         debugPrint('✅ Backend autenticado correctamente');
-        debugPrint('Token JWT: ${data['token']}');
+        
+        // Guardar token de forma segura
+        if (data['token'] != null) {
+          await SecureStorageService.saveToken(data['token']);
+          debugPrint('✅ Token guardado en almacenamiento seguro');
+        }
+        
+        // Guardar email del usuario
+        if (googleUser.email.isNotEmpty) {
+          await SecureStorageService.saveUserEmail(googleUser.email);
+        }
+        
+        // Guardar datos completos del usuario
+        if (data['user'] != null) {
+          await SecureStorageService.saveUserData(jsonEncode(data['user']));
+        }
         
         return {
           'success': true,
@@ -74,7 +91,8 @@ class AuthService {
   Future<void> signOut() async {
     try {
       await _googleSignIn.signOut();
-      debugPrint('✅ Sesión de Google cerrada');
+      await SecureStorageService.deleteTokens();
+      debugPrint('✅ Sesión de Google cerrada y tokens eliminados');
     } catch (e) {
       debugPrint('❌ Error al cerrar sesión: $e');
     }
@@ -82,7 +100,10 @@ class AuthService {
 
   /// Verifica si hay una sesión activa de Google
   Future<bool> isSignedIn() async {
-    return _googleSignIn.isSignedIn();
+    // Verificar tanto Google Sign-In como token válido
+    final googleSignedIn = await _googleSignIn.isSignedIn();
+    final hasValidToken = await SecureStorageService.isAuthenticated();
+    return googleSignedIn && hasValidToken;
   }
 
   /// Obtiene el usuario actual de Google

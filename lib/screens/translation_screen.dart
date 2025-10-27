@@ -4,6 +4,7 @@ import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
 import 'dart:convert';
 import 'package:image_picker/image_picker.dart';
+import '../config/api_config.dart';
 
 // ---- MAIN SCREEN ----
 class TranslationScreen extends StatefulWidget {
@@ -103,10 +104,10 @@ class _TranslationScreenState extends State<TranslationScreen> {
     final toCode = langToCode[toLang]!;
 
     try {
-      final uri = Uri.parse('http://15.228.188.14:5000/api/translate');
+      final uri = Uri.parse(ApiConfig.translate);
       final response = await http.post(
         uri,
-        headers: {'Content-Type': 'application/json'},
+        headers: ApiConfig.commonHeaders,
         body: jsonEncode({'text': input, 'source': fromCode, 'target': toCode}),
       );
       if (response.statusCode == 200) {
@@ -144,7 +145,7 @@ class _TranslationScreenState extends State<TranslationScreen> {
     final toCode = langToCode[toLang]!;
 
     try {
-      final uri = Uri.parse('http://15.228.188.14:5000/api/ocr/analyze');
+      final uri = Uri.parse(ApiConfig.ocrAnalyze);
       final request = http.MultipartRequest('POST', uri);
       request.files.add(
         await http.MultipartFile.fromPath('image', pickedFile.path),

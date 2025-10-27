@@ -5,6 +5,7 @@ import 'package:image_picker/image_picker.dart';
 import 'package:http/http.dart' as http;
 import 'dart:convert';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
+import '../config/api_config.dart';
 
 // Modelo de objeto detectado
 class OcrObject {
@@ -63,7 +64,7 @@ class _OcrScreenState extends State<OcrScreen> {
     String langCode,
   ) async {
     try {
-      final uri = Uri.parse('http://15.228.188.14:5000/api/ocr/analyze');
+      final uri = Uri.parse(ApiConfig.ocrAnalyze);
       final request = http.MultipartRequest('POST', uri);
       request.files.add(await http.MultipartFile.fromPath('image', imagePath));
       request.fields['targetLang'] = langCode;
@@ -135,10 +136,9 @@ class _OcrScreenState extends State<OcrScreen> {
 
   @override
   Widget build(BuildContext context) {
-    final accent = const Color(0xFFDA2C38);
-    final softRed = const Color(0xFFFCE7E9);
-    final bgColor = const Color(0xFFF8F7FA);
-    final l10n = AppLocalizations.of(context)!;
+    const accent = Color(0xFFDA2C38);
+    const softRed = Color(0xFFFCE7E9);
+    const bgColor = Color(0xFFF8F7FA);
 
     return Scaffold(
       backgroundColor: bgColor,
@@ -195,8 +195,8 @@ class _OcrScreenState extends State<OcrScreen> {
         const SizedBox(height: 15),
         Text(
           scanning
-              ? "Escaneando..."
-              : "Escanea una imagen y selecciona el idioma de la información cultural.",
+              ? AppLocalizations.of(context)!.scanning
+              : AppLocalizations.of(context)!.scanAndSelectLang,
           style: TextStyle(
             fontSize: 17,
             color: accent,
@@ -211,7 +211,7 @@ class _OcrScreenState extends State<OcrScreen> {
           mainAxisAlignment: MainAxisAlignment.center,
           children: [
             _scanButton(
-              "Galería",
+              AppLocalizations.of(context)!.gallery,
               CupertinoIcons.photo,
               accent,
               softRed,
@@ -219,7 +219,7 @@ class _OcrScreenState extends State<OcrScreen> {
             ),
             const SizedBox(width: 13),
             _scanButton(
-              "Foto",
+              AppLocalizations.of(context)!.photo,
               CupertinoIcons.camera,
               accent,
               softRed,
@@ -264,7 +264,7 @@ class _OcrScreenState extends State<OcrScreen> {
         ],
         const SizedBox(height: 15),
         Text(
-          "No se detectaron objetos.",
+          AppLocalizations.of(context)!.noObjectsDetected,
           style: TextStyle(
             fontSize: 17,
             color: accent,
@@ -279,14 +279,14 @@ class _OcrScreenState extends State<OcrScreen> {
           borderRadius: BorderRadius.circular(16),
           color: accent,
           onPressed: _resetScan,
-          child: const Row(
+          child: Row(
             mainAxisSize: MainAxisSize.min,
             children: [
-              Icon(CupertinoIcons.camera, color: Colors.white, size: 18),
-              SizedBox(width: 7),
+              const Icon(CupertinoIcons.camera, color: Colors.white, size: 18),
+              const SizedBox(width: 7),
               Text(
-                "Nuevo Escaneo",
-                style: TextStyle(
+                AppLocalizations.of(context)!.newScan,
+                style: const TextStyle(
                   fontSize: 14,
                   fontWeight: FontWeight.w600,
                   color: Colors.white,
@@ -398,7 +398,7 @@ class _OcrScreenState extends State<OcrScreen> {
               Expanded(
                 child: Center(
                   child: Text(
-                    "Escaneo Cultural",
+                    AppLocalizations.of(context)!.culturalScan,
                     style: TextStyle(
                       fontWeight: FontWeight.bold,
                       color: accent,
@@ -444,7 +444,7 @@ class _OcrScreenState extends State<OcrScreen> {
                 Icon(CupertinoIcons.globe, color: accent, size: 20),
                 const SizedBox(width: 4),
                 Text(
-                  "Idioma detectado: $detectedLang",
+                  AppLocalizations.of(context)!.detectedLang(detectedLang),
                   style: TextStyle(
                     fontWeight: FontWeight.bold,
                     fontSize: 14,
@@ -456,7 +456,7 @@ class _OcrScreenState extends State<OcrScreen> {
           const SizedBox(height: 9),
           Center(
             child: Text(
-              "Análisis Cultural",
+              AppLocalizations.of(context)!.culturalAnalysis,
               style: TextStyle(
                 fontWeight: FontWeight.w500,
                 fontSize: 16,
@@ -480,21 +480,21 @@ class _OcrScreenState extends State<OcrScreen> {
                 children: [
                   _OcrResultSection(
                     icon: CupertinoIcons.textformat_alt,
-                    title: "Identificación",
+                    title: AppLocalizations.of(context)!.identification,
                     color: accent,
                     content: obj.name,
                   ),
                   const SizedBox(height: 12),
                   _OcrResultSection(
                     icon: CupertinoIcons.book,
-                    title: "Explicación Cultural",
+                    title: AppLocalizations.of(context)!.culturalExplanation,
                     color: accent,
                     content: obj.explanation,
                   ),
                   const SizedBox(height: 12),
                   _OcrResultSection(
                     icon: CupertinoIcons.globe,
-                    title: "Traducción",
+                    title: AppLocalizations.of(context)!.translation,
                     color: accent,
                     content: obj.translation,
                   ),
@@ -507,14 +507,14 @@ class _OcrScreenState extends State<OcrScreen> {
             borderRadius: BorderRadius.circular(16),
             color: accent,
             onPressed: _resetScan,
-            child: const Row(
+            child: Row(
               mainAxisSize: MainAxisSize.min,
               children: [
-                Icon(CupertinoIcons.camera, color: Colors.white, size: 18),
-                SizedBox(width: 7),
+                const Icon(CupertinoIcons.camera, color: Colors.white, size: 18),
+                const SizedBox(width: 7),
                 Text(
-                  "Nuevo Escaneo",
-                  style: TextStyle(
+                  AppLocalizations.of(context)!.newScan,
+                  style: const TextStyle(
                     fontSize: 14,
                     fontWeight: FontWeight.w600,
                     color: Colors.white,

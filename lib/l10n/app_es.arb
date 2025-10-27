@@ -21,6 +21,96 @@
   "ocrTranslation": "Traducción",
   "ocrBack": "Volver",
   "ocrBoundingBox": "Bounding Box:",
+  "@ocrBoundingBox": {
+    "description": "Etiqueta para el bounding box en OCR"
+  },
+  
+  "scanning": "Escaneando...",
+  "@scanning": {
+    "description": "Mensaje mostrado durante el escaneo OCR"
+  },
+  
+  "scanAndSelectLang": "Escanea una imagen y selecciona el idioma de la información cultural.",
+  "@scanAndSelectLang": {
+    "description": "Mensaje de instrucción para escanear imagen"
+  },
+  
+  "gallery": "Galería",
+  "@gallery": {
+    "description": "Botón para seleccionar imagen de galería"
+  },
+  
+  "photo": "Foto",
+  "@photo": {
+    "description": "Botón para tomar foto con cámara"
+  },
+  
+  "noObjectsDetected": "No se detectaron objetos.",
+  "@noObjectsDetected": {
+    "description": "Mensaje cuando no se detectan objetos en la imagen"
+  },
+  
+  "newScan": "Nuevo Escaneo",
+  "@newScan": {
+    "description": "Botón para iniciar un nuevo escaneo"
+  },
+  
+  "culturalScan": "Escaneo Cultural",
+  "@culturalScan": {
+    "description": "Título de la pantalla de detalle del escaneo cultural"
+  },
+  
+  "detectedLang": "Idioma detectado: {lang}",
+  "@detectedLang": {
+    "description": "Muestra el idioma detectado en la imagen",
+    "placeholders": {
+      "lang": {
+        "type": "String",
+        "example": "Español"
+      }
+    }
+  },
+  
+  "culturalAnalysis": "Análisis Cultural",
+  "@culturalAnalysis": {
+    "description": "Título de la sección de análisis cultural"
+  },
+  
+  "identification": "Identificación",
+  "@identification": {
+    "description": "Etiqueta para la sección de identificación del objeto"
+  },
+  
+  "culturalExplanation": "Explicación Cultural",
+  "@culturalExplanation": {
+    "description": "Etiqueta para la sección de explicación cultural"
+  },
+  
+  "translation": "Traducción",
+  "@translation": {
+    "description": "Etiqueta para la sección de traducción"
+  },
+  
+  "errorOpenMaps": "No se pudo abrir Google Maps ni el navegador.",
+  "@errorOpenMaps": {
+    "description": "Mensaje de error cuando no se puede abrir Google Maps"
+  },
+  
+  "searchSitesPlaceholder": "Buscar sitios o rutas...",
+  "@searchSitesPlaceholder": {
+    "description": "Placeholder para el campo de búsqueda de sitios"
+  },
+  
+  "back": "Volver",
+  "@back": {
+    "description": "Botón para volver atrás"
+  },
+  
+  "choosePreferredLanguage": "Elige tu idioma preferido para la aplicación",
+  "@choosePreferredLanguage": {
+    "description": "Mensaje para seleccionar idioma preferido"
+  },
+  
   "explore": "Explorar",
   "discoverAndean": "Descubre las maravillas de la cultura andina.",
   "searchSites": "Buscar sitios o rutas...",

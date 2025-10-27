@@ -4,6 +4,7 @@ import 'package:flutter/cupertino.dart';
 import 'dart:convert';
 import 'package:http/http.dart' as http;
 import 'package:url_launcher/url_launcher.dart';
+import '../config/api_config.dart';
 
 // Helper para mostrar categoría en formato ordenado
 String prettyCategory(String? category) {
@@ -50,8 +51,8 @@ class _ExploreScreenState extends State<ExploreScreen> {
     try {
       final uri = Uri.parse(
         query == null || query.isEmpty
-            ? 'http://15.228.188.14:5000/api/explorer'
-            : 'http://15.228.188.14:5000/api/explorer?query=${Uri.encodeComponent(query)}',
+            ? ApiConfig.explorer
+            : ApiConfig.explorerSearch(query),
       );
       final res = await http.get(uri);
       if (res.statusCode == 200) {
@@ -90,9 +91,10 @@ class _ExploreScreenState extends State<ExploreScreen> {
     if (await canLaunchUrl(uri)) {
       await launchUrl(uri, mode: LaunchMode.externalApplication);
     } else {
+      final l10n = AppLocalizations.of(context)!;
       ScaffoldMessenger.of(context).showSnackBar(
-        const SnackBar(
-          content: Text("No se pudo abrir Google Maps ni el navegador."),
+        SnackBar(
+          content: Text(l10n.errorOpenMaps),
           backgroundColor: Colors.red,
         ),
       );
@@ -161,9 +163,10 @@ class _SearchBar extends StatelessWidget {
   const _SearchBar({required this.controller});
   @override
   Widget build(BuildContext context) {
+    final l10n = AppLocalizations.of(context)!;
     return CupertinoTextField(
       controller: controller,
-      placeholder: "Buscar sitios o rutas...",
+      placeholder: l10n.searchSitesPlaceholder,
       prefix: const Padding(
         padding: EdgeInsets.only(left: 8, right: 7),
         child: Icon(CupertinoIcons.search, color: Color(0xFFDA2C38)),

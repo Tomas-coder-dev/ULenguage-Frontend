@@ -7,9 +7,9 @@
   "client": [
     {
       "client_info": {
-        "mobilesdk_app_id": "1:250811921383:android:98bf58c7b2f785d5028342",
+        "mobilesdk_app_id": "1:250811921383:android:6a96db2765769c0b028342",
         "android_client_info": {
-          "package_name": "ulenguage.tesis"
+          "package_name": "com.example.ulenguage_app_n"
         }
       },
       "oauth_client": [
