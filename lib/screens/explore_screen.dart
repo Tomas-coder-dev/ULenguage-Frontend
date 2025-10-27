@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_gen/gen_l10n/app_localizations.dart';
+import '../l10n/app_localizations.dart';
 import 'package:flutter/cupertino.dart';
 import 'dart:convert';
 import 'package:http/http.dart' as http;
@@ -10,9 +10,9 @@ import '../config/api_config.dart';
 String prettyCategory(String? category) {
   if (category == null) return "Lugar turístico";
   return category.replaceAll("_", " ").replaceFirstMapped(
-    RegExp(r'^[a-z]'),
-    (m) => m[0]!.toUpperCase(),
-  );
+        RegExp(r'^[a-z]'),
+        (m) => m[0]!.toUpperCase(),
+      );
 }
 
 class ExploreScreen extends StatefulWidget {
@@ -90,7 +90,7 @@ class _ExploreScreenState extends State<ExploreScreen> {
     final uri = Uri.parse(url);
     if (await canLaunchUrl(uri)) {
       await launchUrl(uri, mode: LaunchMode.externalApplication);
-    } else {
+    } else if (mounted) {
       final l10n = AppLocalizations.of(context)!;
       ScaffoldMessenger.of(context).showSnackBar(
         SnackBar(
@@ -110,7 +110,8 @@ class _ExploreScreenState extends State<ExploreScreen> {
       navigationBar: CupertinoNavigationBar(
         middle: Text(
           l10n.explore,
-          style: const TextStyle(color: Colors.white, fontWeight: FontWeight.bold),
+          style:
+              const TextStyle(color: Colors.white, fontWeight: FontWeight.bold),
         ),
         backgroundColor: const Color(0xFFDA2C38),
         border: null,
@@ -298,7 +299,6 @@ class _OverviewSection extends StatelessWidget {
                                 horizontal: 18, vertical: 7),
                             color: const Color(0xFF8559DA),
                             borderRadius: BorderRadius.circular(15),
-                            minSize: 36,
                             child: const Row(
                               mainAxisSize: MainAxisSize.min,
                               children: [

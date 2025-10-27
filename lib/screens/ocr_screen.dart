@@ -4,7 +4,7 @@ import 'package:flutter/cupertino.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:http/http.dart' as http;
 import 'dart:convert';
-import 'package:flutter_gen/gen_l10n/app_localizations.dart';
+import '../l10n/app_localizations.dart';
 import '../config/api_config.dart';
 
 // Modelo de objeto detectado
@@ -460,7 +460,6 @@ class _OcrScreenState extends State<OcrScreen> {
               style: TextStyle(
                 fontWeight: FontWeight.w500,
                 fontSize: 16,
-                // ignore: deprecated_member_use
                 color: accent.withOpacity(0.65),
                 letterSpacing: 0.1,
               ),

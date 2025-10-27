@@ -1,0 +1,18 @@
+{
+  "qu": [
+    "scanning",
+    "scanAndSelectLang",
+    "gallery",
+    "photo",
+    "noObjectsDetected",
+    "newScan",
+    "culturalScan",
+    "detectedLang",
+    "culturalAnalysis",
+    "identification",
+    "culturalExplanation",
+    "translation",
+    "searchSitesPlaceholder",
+    "errorOpenMaps"
+  ]
+}

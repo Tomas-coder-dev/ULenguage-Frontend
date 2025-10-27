@@ -11,120 +11,20 @@
   "ocrSelectImage": "Select an image to analyze and detect cultural objects.",
   "ocrScanImage": "Scan Image",
   "ocrScanError": "OCR scan error",
-  "ocrConnectionError": "Connection error",
-  "ocrNoObjects": "No objects detected.",
-  "ocrObjectsDetected": "Objects Detected",
-  "ocrNewScan": "New Scan",
-  "ocrAnalysis": "Cultural Analysis",
-  "ocrIdentification": "Identification",
-  "ocrExplanation": "Cultural Explanation",
-  "ocrTranslation": "Translation",
-  "ocrBack": "Back",
-  "ocrBoundingBox": "Bounding Box:",
-  "@ocrBoundingBox": {
-    "description": "Label for bounding box in OCR"
-  },
-  
   "scanning": "Scanning...",
-  "@scanning": {
-    "description": "Message displayed during OCR scan"
-  },
-  
   "scanAndSelectLang": "Scan an image and select the language for cultural information.",
-  "@scanAndSelectLang": {
-    "description": "Instruction message for scanning image"
-  },
-  
   "gallery": "Gallery",
-  "@gallery": {
-    "description": "Button to select image from gallery"
-  },
-  
   "photo": "Photo",
-  "@photo": {
-    "description": "Button to take photo with camera"
-  },
-  
   "noObjectsDetected": "No objects detected.",
-  "@noObjectsDetected": {
-    "description": "Message when no objects are detected in the image"
-  },
-  
   "newScan": "New Scan",
-  "@newScan": {
-    "description": "Button to start a new scan"
-  },
-  
   "culturalScan": "Cultural Scan",
-  "@culturalScan": {
-    "description": "Title of the cultural scan detail screen"
-  },
-  
   "detectedLang": "Detected language: {lang}",
-  "@detectedLang": {
-    "description": "Shows the detected language in the image",
-    "placeholders": {
-      "lang": {
-        "type": "String",
-        "example": "Spanish"
-      }
-    }
-  },
-  
   "culturalAnalysis": "Cultural Analysis",
-  "@culturalAnalysis": {
-    "description": "Title of the cultural analysis section"
-  },
-  
   "identification": "Identification",
-  "@identification": {
-    "description": "Label for the object identification section"
-  },
-  
   "culturalExplanation": "Cultural Explanation",
-  "@culturalExplanation": {
-    "description": "Label for the cultural explanation section"
-  },
-  
   "translation": "Translation",
-  "@translation": {
-    "description": "Label for the translation section"
-  },
-  
-  "errorOpenMaps": "Could not open Google Maps or browser.",
-  "@errorOpenMaps": {
-    "description": "Error message when Google Maps cannot be opened"
-  },
-  
   "searchSitesPlaceholder": "Search sites or routes...",
-  "@searchSitesPlaceholder": {
-    "description": "Placeholder for the sites search field"
-  },
-  
-  "back": "Back",
-  "@back": {
-    "description": "Button to go back"
-  },
-  
-  "choosePreferredLanguage": "Choose your preferred language for the app",
-  "@choosePreferredLanguage": {
-    "description": "Message to select preferred language"
-  },
-  
-  "explore": "Explore",
-  "discoverAndean": "Discover the wonders of Andean culture.",
-  "searchSites": "Search sites or routes...",
-  "popularSites": "Popular Sites",
-  "mountain": "Mountain",
-  "city": "City",
-  "culturalRoute": "Cultural Route",
-  "easy": "Easy",
-  "medium": "Medium",
-  "hard": "Hard",
-  "culturalDescription": "Cultural Description",
-  "howToGet": "How to get there",
-  "close": "Close",
-  "profileTitle": "Profile",
+  "errorOpenMaps": "Could not open Google Maps",
   "culturalUser": "Cultural user",
   "achievementsActivity": "Achievements & Activity",
   "culturalAchievements": "8 Cultural achievements",
@@ -170,11 +70,11 @@
   "explore": "Explore",
   "translate": "Translate",
   "profile": "Profile",
+  "profileTitle": "Profile",
   "scanText": "Scan text",
   "takePhoto": "Take photo",
   "selectFromGallery": "Select from gallery",
   "cancel": "Cancel",
-  "logout": "Log out",
   "settings": "Settings",
   "language": "Language",
   "spanish": "Spanish",

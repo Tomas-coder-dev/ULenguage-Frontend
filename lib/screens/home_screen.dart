@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_gen/gen_l10n/app_localizations.dart';
+// Cambia el import para apuntar a tu archivo generado real.
+// Si tu archivo generado está en lib/l10n/app_localizations.dart, haz:
+import '../../l10n/app_localizations.dart';
 
 class HomeScreen extends StatelessWidget {
   const HomeScreen({super.key});
@@ -122,7 +124,8 @@ class HomeScreen extends StatelessWidget {
                     const SizedBox(height: 4),
                     Text(
                       l10n.culturalAdventure,
-                      style: const TextStyle(fontSize: 15, color: Color(0xFF656565)),
+                      style: const TextStyle(
+                          fontSize: 15, color: Color(0xFF656565)),
                     ),
                     const SizedBox(height: 18),
                     Card(
@@ -211,7 +214,8 @@ class HomeScreen extends StatelessWidget {
                     borderRadius: BorderRadius.circular(22),
                   ),
                   child: Padding(
-                    padding: const EdgeInsets.symmetric(vertical: 22, horizontal: 18),
+                    padding: const EdgeInsets.symmetric(
+                        vertical: 22, horizontal: 18),
                     child: Column(
                       children: [
                         const Icon(
@@ -269,7 +273,8 @@ class HomeScreen extends StatelessWidget {
                         const SizedBox(height: 3),
                         Text(
                           l10n.downloadOffline,
-                          style: const TextStyle(fontSize: 13, color: Colors.black54),
+                          style: const TextStyle(
+                              fontSize: 13, color: Colors.black54),
                         ),
                         const SizedBox(height: 14),
                         for (final paquete in paquetesLocales(context))

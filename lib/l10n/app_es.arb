@@ -1,323 +1,375 @@
 {
   "@@locale": "es",
-  "packageQuechua": "Paquete de idioma Quechua",
-  "packageCuscoGuide": "Guía de Cuzco",
-  "navbarHome": "Inicio",
-  "navbarTranslate": "Traducción",
-  "navbarExplore": "Explorar",
-  "navbarProfile": "Perfil",
-  "ocrTitle": "Escaneo (OCR)",
-  "ocrScanning": "Escaneando...",
-  "ocrSelectImage": "Selecciona una imagen para analizar y detectar objetos culturales.",
-  "ocrScanImage": "Escanear Imagen",
-  "ocrScanError": "Error de escaneo OCR",
-  "ocrConnectionError": "Error de conexión",
-  "ocrNoObjects": "No se detectaron objetos.",
-  "ocrObjectsDetected": "Objetos Detectados",
-  "ocrNewScan": "Nuevo Escaneo",
-  "ocrAnalysis": "Análisis Cultural",
-  "ocrIdentification": "Identificación",
-  "ocrExplanation": "Explicación Cultural",
-  "ocrTranslation": "Traducción",
-  "ocrBack": "Volver",
-  "ocrBoundingBox": "Bounding Box:",
-  "@ocrBoundingBox": {
-    "description": "Etiqueta para el bounding box en OCR"
-  },
-  
-  "scanning": "Escaneando...",
-  "@scanning": {
-    "description": "Mensaje mostrado durante el escaneo OCR"
-  },
-  
-  "scanAndSelectLang": "Escanea una imagen y selecciona el idioma de la información cultural.",
-  "@scanAndSelectLang": {
-    "description": "Mensaje de instrucción para escanear imagen"
-  },
-  
-  "gallery": "Galería",
-  "@gallery": {
-    "description": "Botón para seleccionar imagen de galería"
-  },
-  
-  "photo": "Foto",
-  "@photo": {
-    "description": "Botón para tomar foto con cámara"
-  },
-  
-  "noObjectsDetected": "No se detectaron objetos.",
-  "@noObjectsDetected": {
-    "description": "Mensaje cuando no se detectan objetos en la imagen"
-  },
-  
-  "newScan": "Nuevo Escaneo",
-  "@newScan": {
-    "description": "Botón para iniciar un nuevo escaneo"
-  },
-  
-  "culturalScan": "Escaneo Cultural",
-  "@culturalScan": {
-    "description": "Título de la pantalla de detalle del escaneo cultural"
-  },
-  
-  "detectedLang": "Idioma detectado: {lang}",
-  "@detectedLang": {
-    "description": "Muestra el idioma detectado en la imagen",
-    "placeholders": {
-      "lang": {
-        "type": "String",
-        "example": "Español"
-      }
-    }
-  },
-  
-  "culturalAnalysis": "Análisis Cultural",
-  "@culturalAnalysis": {
-    "description": "Título de la sección de análisis cultural"
-  },
-  
-  "identification": "Identificación",
-  "@identification": {
-    "description": "Etiqueta para la sección de identificación del objeto"
-  },
-  
-  "culturalExplanation": "Explicación Cultural",
-  "@culturalExplanation": {
-    "description": "Etiqueta para la sección de explicación cultural"
-  },
-  
-  "translation": "Traducción",
-  "@translation": {
-    "description": "Etiqueta para la sección de traducción"
-  },
-  
-  "errorOpenMaps": "No se pudo abrir Google Maps ni el navegador.",
-  "@errorOpenMaps": {
-    "description": "Mensaje de error cuando no se puede abrir Google Maps"
-  },
-  
-  "searchSitesPlaceholder": "Buscar sitios o rutas...",
-  "@searchSitesPlaceholder": {
-    "description": "Placeholder para el campo de búsqueda de sitios"
-  },
-  
-  "back": "Volver",
-  "@back": {
-    "description": "Botón para volver atrás"
-  },
-  
-  "choosePreferredLanguage": "Elige tu idioma preferido para la aplicación",
-  "@choosePreferredLanguage": {
-    "description": "Mensaje para seleccionar idioma preferido"
-  },
-  
-  "explore": "Explorar",
-  "discoverAndean": "Descubre las maravillas de la cultura andina.",
-  "searchSites": "Buscar sitios o rutas...",
-  "popularSites": "Sitios Populares",
-  "mountain": "Montaña",
-  "city": "Ciudad",
-  "culturalRoute": "Ruta Cultural",
-  "easy": "Fácil",
-  "medium": "Media",
-  "hard": "Difícil",
-  "culturalDescription": "Descripción Cultural",
-  "howToGet": "Como llegar",
-  "close": "Cerrar",
-  "profileTitle": "Perfil",
-  "culturalUser": "Usuario cultural",
-  "achievementsActivity": "Logros y Actividad",
-  "culturalAchievements": "8 Logros culturales",
-  "keepLearning": "¡Sigue aprendiendo idiomas y explorando!",
-  "translations": "248 Traducciones",
-  "translationsToday": "+12 traducciones hoy",
-  "placesExplored": "4 Lugares explorados",
-  "culturalRoutes": "3 rutas culturales",
-  "accountPreferences": "Cuenta y Preferencias",
-  "notifications": "Notificaciones",
-  "accountSettings": "Configuración de la cuenta",
-  "changePassword": "Cambiar contraseña",
-  "helpSupport": "Ayuda y soporte",
-  "logout": "Cerrar sesión",
-  "version": "v1.0.0 • ULenguage",
-  "connected": "Conectado",
-  "packagesCount": "3 paquetes",
-  "welcomeUser": "¡Bienvenido, {user}!",
-  "culturalAdventure": "Tu aventura cultural continúa",
-  "culturalProgress": "Progreso Cultural",
-  "exploringAndeanCultures": "Explorando culturas andinas",
-  "keepExploring": "Continúa explorando para desbloquear nuevos horizontes",
-  "languageWindowQuote": "Cada idioma es una ventana al alma de un pueblo",
-  "enjoyLearning": "Disfruta aprendiendo y explorando nuevas culturas. Tu conexión con las culturas andinas crece cada día.",
-  "availablePackages": "Paquetes Disponibles:",
-  "downloadOffline": "Descarga contenido para usar la app sin conexión a internet.",
-  "quechuaPackage": "Paquete de idioma Quechua",
-  "cuscoGuide": "Guía de Cuzco",
   "appName": "ULenguage",
   "@appName": {
     "description": "Nombre de la aplicación"
-  },
-  
-  "welcome": "Bienvenido",
-  "@welcome": {
-    "description": "Mensaje de bienvenida"
-  },
-  
-  "welcomeSubtitle": "Aprende, traduce y conecta\ncon el mundo andino.",
-  "@welcomeSubtitle": {
-    "description": "Subtítulo de bienvenida"
-  },
-  
-  "startAdventure": "¡Inicia tu aventura!",
-  "@startAdventure": {
-    "description": "Botón de inicio de aventura"
-  },
-  
-  "login": "Iniciar sesión",
-  "@login": {
-    "description": "Botón de inicio de sesión"
-  },
-  
-  "email": "Correo electrónico",
-  "@email": {
-    "description": "Campo de email"
-  },
-  
-  "password": "Contraseña",
-  "@password": {
-    "description": "Campo de contraseña"
-  },
-  
-  "forgotPassword": "¿Olvidaste tu contraseña?",
-  "@forgotPassword": {
-    "description": "Enlace para recuperar contraseña"
-  },
-  
-  "continueWith": "O continúa con",
-  "@continueWith": {
-    "description": "Texto para login social"
-  },
-  
-  "continueWithGoogle": "Continuar con Google",
-  "@continueWithGoogle": {
-    "description": "Botón de login con Google"
-  },
-  
-  "continueWithFacebook": "Continuar con Facebook",
-  "@continueWithFacebook": {
-    "description": "Botón de login con Facebook"
-  },
-  
-  "noAccount": "¿No tienes cuenta?",
-  "@noAccount": {
-    "description": "Pregunta si no tiene cuenta"
-  },
-  
-  "register": "Regístrate",
-  "@register": {
-    "description": "Botón de registro"
-  },
-  
-  "home": "Inicio",
-  "@home": {
-    "description": "Tab de inicio"
-  },
-  
-  "explore": "Explorar",
-  "@explore": {
-    "description": "Tab de explorar"
-  },
-  
-  "translate": "Traducir",
-  "@translate": {
-    "description": "Tab de traducir"
-  },
-  
-  "profile": "Perfil",
-  "@profile": {
-    "description": "Tab de perfil"
-  },
-  
-  "scanText": "Escanear texto",
-  "@scanText": {
-    "description": "Botón para escanear texto"
-  },
-  
-  "takePhoto": "Tomar foto",
-  "@takePhoto": {
-    "description": "Botón para tomar foto"
-  },
-  
-  "selectFromGallery": "Seleccionar de galería",
-  "@selectFromGallery": {
-    "description": "Botón para seleccionar de galería"
-  },
-  
-  "cancel": "Cancelar",
-  "@cancel": {
-    "description": "Botón cancelar"
-  },
-  
-  "logout": "Cerrar sesión",
-  "@logout": {
-    "description": "Botón cerrar sesión"
-  },
-  
-  "settings": "Configuración",
-  "@settings": {
-    "description": "Configuración"
-  },
-  
-  "language": "Idioma",
-  "@language": {
-    "description": "Opción de idioma"
-  },
-  
-  "spanish": "Español",
-  "@spanish": {
-    "description": "Idioma español"
-  },
-  
-  "english": "Inglés",
-  "@english": {
-    "description": "Idioma inglés"
-  },
-  
-  "quechua": "Quechua Cusqueño",
-  "@quechua": {
-    "description": "Idioma quechua"
-  },
-  
-  "selectLanguage": "Seleccionar idioma",
-  "@selectLanguage": {
-    "description": "Título para selección de idioma"
-  },
-  
-  "save": "Guardar",
-  "@save": {
-    "description": "Botón guardar"
-  },
-  
-  "error": "Error",
-  "@error": {
-    "description": "Título de error"
-  },
-  
-  "success": "Éxito",
-  "@success": {
-    "description": "Título de éxito"
-  },
-  
-  "loading": "Cargando...",
-  "@loading": {
-    "description": "Mensaje de carga"
   },
   "authErrorTitle": "Error de autenticación",
   "@authErrorTitle": {
     "description": "Título del diálogo de error de autenticación"
   },
+  "back": "Volver",
+  "@back": {
+    "description": "Botón para volver atrás"
+  },
+  "cancel": "Cancelar",
+  "@cancel": {
+    "description": "Botón cancelar"
+  },
+  "choosePreferredLanguage": "Elige tu idioma preferido para la aplicación",
+  "@choosePreferredLanguage": {
+    "description": "Mensaje para seleccionar idioma preferido"
+  },
+  "continueWith": "O continúa con",
+  "@continueWith": {
+    "description": "Texto para login social"
+  },
+  "continueWithFacebook": "Continuar con Facebook",
+  "@continueWithFacebook": {
+    "description": "Botón de login con Facebook"
+  },
+  "continueWithGoogle": "Continuar con Google",
+  "@continueWithGoogle": {
+    "description": "Botón de login con Google"
+  },
+  "culturalAnalysis": "Análisis Cultural",
+  "@culturalAnalysis": {
+    "description": "Título de la sección de análisis cultural"
+  },
+  "culturalExplanation": "Explicación Cultural",
+  "@culturalExplanation": {
+    "description": "Etiqueta para la sección de explicación cultural"
+  },
+  "culturalScan": "Escaneo Cultural",
+  "@culturalScan": {
+    "description": "Título de la pantalla de detalle del escaneo cultural"
+  },
+  "detectedLang": "Idioma detectado: {lang}",
+  "@detectedLang": {
+    "description": "Muestra el idioma detectado en la imagen",
+    "placeholders": {
+      "lang": {
+        "type": "Object",
+        "example": "Español"
+      }
+    }
+  },
+  "email": "Correo electrónico",
+  "@email": {
+    "description": "Campo de email"
+  },
+  "english": "Inglés",
+  "@english": {
+    "description": "Idioma inglés"
+  },
+  "error": "Error",
+  "@error": {
+    "description": "Título de error"
+  },
+  "errorOpenMaps": "No se pudo abrir Google Maps",
+  "@errorOpenMaps": {
+    "description": "Mensaje mostrado cuando falla la apertura de Google Maps"
+  },
+  "explore": "Explorar",
+  "@explore": {
+    "description": "Tab de explorar"
+  },
+  "forgotPassword": "¿Olvidaste tu contraseña?",
+  "@forgotPassword": {
+    "description": "Enlace para recuperar contraseña"
+  },
+  "gallery": "Galería",
+  "@gallery": {
+    "description": "Botón para seleccionar imagen de galería"
+  },
+  "home": "Inicio",
+  "@home": {
+    "description": "Tab de inicio"
+  },
+  "identification": "Identificación",
+  "@identification": {
+    "description": "Etiqueta para la sección de identificación del objeto"
+  },
+  "language": "Idioma",
+  "@language": {
+    "description": "Opción de idioma"
+  },
+  "loading": "Cargando...",
+  "@loading": {
+    "description": "Mensaje de carga"
+  },
+  "login": "Iniciar sesión",
+  "@login": {
+    "description": "Botón de inicio de sesión"
+  },
+  "logout": "Cerrar sesión",
+  "@logout": {
+    "description": "Botón cerrar sesión"
+  },
+  "newScan": "Nuevo Escaneo",
+  "@newScan": {
+    "description": "Botón para iniciar un nuevo escaneo"
+  },
+  "noAccount": "¿No tienes cuenta?",
+  "@noAccount": {
+    "description": "Pregunta si no tiene cuenta"
+  },
+  "noObjectsDetected": "No se detectaron objetos.",
+  "@noObjectsDetected": {
+    "description": "Mensaje cuando no se detectan objetos en la imagen"
+  },
+  "ocrBoundingBox": "Bounding Box:",
+  "@ocrBoundingBox": {
+    "description": "Etiqueta para el bounding box en OCR"
+  },
   "ok": "OK",
   "@ok": {
     "description": "Botón de aceptar genérico"
+  },
+  "password": "Contraseña",
+  "@password": {
+    "description": "Campo de contraseña"
+  },
+  "photo": "Foto",
+  "@photo": {
+    "description": "Botón para tomar foto con cámara"
+  },
+  "profile": "Perfil",
+  "@profile": {
+    "description": "Tab de perfil"
+  },
+  "profileTitle": "Perfil",
+  "@profileTitle": {
+    "description": "Título de la pantalla de perfil"
+  },
+  "quechua": "Quechua Cusqueño",
+  "@quechua": {
+    "description": "Idioma quechua"
+  },
+  "register": "Regístrate",
+  "@register": {
+    "description": "Botón de registro"
+  },
+  "save": "Guardar",
+  "@save": {
+    "description": "Botón guardar"
+  },
+  "scanAndSelectLang": "Escanea una imagen y selecciona el idioma de la información cultural.",
+  "@scanAndSelectLang": {
+    "description": "Mensaje de instrucción para escanear imagen"
+  },
+  "scanText": "Escanear texto",
+  "@scanText": {
+    "description": "Botón para escanear texto"
+  },
+  "scanning": "Escaneando...",
+  "@scanning": {
+    "description": "Mensaje mostrado durante el escaneo OCR"
+  },
+  "searchSitesPlaceholder": "Buscar sitios o rutas...",
+  "@searchSitesPlaceholder": {
+    "description": "Placeholder para el campo de búsqueda de sitios"
+  },
+  "selectFromGallery": "Seleccionar de galería",
+  "@selectFromGallery": {
+    "description": "Botón para seleccionar de galería"
+  },
+  "selectLanguage": "Seleccionar idioma",
+  "@selectLanguage": {
+    "description": "Título para selección de idioma"
+  },
+  "settings": "Configuración",
+  "@settings": {
+    "description": "Configuración"
+  },
+  "spanish": "Español",
+  "@spanish": {
+    "description": "Idioma español"
+  },
+  "startAdventure": "¡Inicia tu aventura!",
+  "@startAdventure": {
+    "description": "Botón de inicio de aventura"
+  },
+  "success": "Éxito",
+  "@success": {
+    "description": "Título de éxito"
+  },
+  "takePhoto": "Tomar foto",
+  "@takePhoto": {
+    "description": "Botón para tomar foto"
+  },
+  "translate": "Traducir",
+  "@translate": {
+    "description": "Tab de traducir"
+  },
+  "translation": "Traducción",
+  "@translation": {
+    "description": "Etiqueta para la sección de traducción"
+  },
+  "welcome": "Bienvenido",
+  "@welcome": {
+    "description": "Mensaje de bienvenida"
+  },
+  "welcomeSubtitle": "Aprende, traduce y conecta\ncon el mundo andino.",
+  "@welcomeSubtitle": {
+    "description": "Subtítulo de bienvenida"
+  },
+  "achievementsActivity": "Logros y actividad",
+  "@achievementsActivity": {
+    "description": "Sección de logros y actividad cultural"
+  },
+  "accountPreferences": "Cuenta y preferencias",
+  "@accountPreferences": {
+    "description": "Preferencias de la cuenta del usuario"
+  },
+  "accountSettings": "Configuración de la cuenta",
+  "@accountSettings": {
+    "description": "Configuración de la cuenta del usuario"
+  },
+  "availablePackages": "Paquetes disponibles:",
+  "@availablePackages": {
+    "description": "Etiqueta para mostrar los paquetes disponibles"
+  },
+  "changePassword": "Cambiar contraseña",
+  "@changePassword": {
+    "description": "Opción para cambiar la contraseña"
+  },
+  "connected": "Conectado",
+  "@connected": {
+    "description": "Estado de conexión"
+  },
+  "culturalAchievements": "8 logros culturales",
+  "@culturalAchievements": {
+    "description": "Cantidad de logros culturales obtenidos"
+  },
+  "culturalAdventure": "Tu aventura cultural continúa",
+  "@culturalAdventure": {
+    "description": "Mensaje para continuar la aventura cultural"
+  },
+  "culturalProgress": "Progreso cultural",
+  "@culturalProgress": {
+    "description": "Sección de progreso cultural"
+  },
+  "culturalRoutes": "3 rutas culturales",
+  "@culturalRoutes": {
+    "description": "Cantidad de rutas culturales exploradas"
+  },
+  "culturalUser": "Usuario cultural",
+  "@culturalUser": {
+    "description": "Etiqueta para usuario cultural"
+  },
+  "cuscoGuide": "Guía de Cusco",
+  "@cuscoGuide": {
+    "description": "Paquete de guía turística de Cusco"
+  },
+  "downloadOffline": "Descarga contenido para usar la app sin conexión.",
+  "@downloadOffline": {
+    "description": "Mensaje para descargar contenido offline"
+  },
+  "enjoyLearning": "Disfruta aprendiendo y explorando nuevas culturas. Tu conexión con las culturas andinas crece cada día.",
+  "@enjoyLearning": {
+    "description": "Mensaje motivacional para el aprendizaje cultural"
+  },
+  "exploringAndeanCultures": "Explorando culturas andinas",
+  "@exploringAndeanCultures": {
+    "description": "Mensaje para explorar culturas andinas"
+  },
+  "helpSupport": "Ayuda y soporte",
+  "@helpSupport": {
+    "description": "Opción de ayuda y soporte"
+  },
+  "keepExploring": "Sigue explorando para descubrir nuevos horizontes",
+  "@keepExploring": {
+    "description": "Mensaje para motivar la exploración cultural"
+  },
+  "keepLearning": "Sigue aprendiendo idiomas y explorando!",
+  "@keepLearning": {
+    "description": "Mensaje para motivar el aprendizaje de idiomas"
+  },
+  "languageWindowQuote": "Cada idioma es una ventana al alma de un pueblo",
+  "@languageWindowQuote": {
+    "description": "Frase motivacional sobre los idiomas"
+  },
+  "navbarExplore": "Explorar",
+  "@navbarExplore": {
+    "description": "Etiqueta de navegación para explorar"
+  },
+  "navbarHome": "Inicio",
+  "@navbarHome": {
+    "description": "Etiqueta de navegación para inicio"
+  },
+  "navbarProfile": "Perfil",
+  "@navbarProfile": {
+    "description": "Etiqueta de navegación para perfil"
+  },
+  "navbarTranslate": "Traducir",
+  "@navbarTranslate": {
+    "description": "Etiqueta de navegación para traducir"
+  },
+  "notifications": "Notificaciones",
+  "@notifications": {
+    "description": "Sección de notificaciones"
+  },
+  "ocrScanError": "Error de escaneo OCR",
+  "@ocrScanError": {
+    "description": "Mensaje de error en el escaneo OCR"
+  },
+  "ocrScanImage": "Escanear imagen",
+  "@ocrScanImage": {
+    "description": "Botón para escanear imagen"
+  },
+  "ocrScanning": "Escaneando...",
+  "@ocrScanning": {
+    "description": "Mensaje mostrado durante el escaneo OCR"
+  },
+  "ocrSelectImage": "Selecciona una imagen para analizar y detectar objetos culturales.",
+  "@ocrSelectImage": {
+    "description": "Mensaje para seleccionar imagen en OCR"
+  },
+  "ocrTitle": "Escaneo OCR",
+  "@ocrTitle": {
+    "description": "Título de la sección de escaneo OCR"
+  },
+  "packageCuscoGuide": "Paquete Guía de Cusco",
+  "@packageCuscoGuide": {
+    "description": "Nombre del paquete de guía de Cusco"
+  },
+  "packageQuechua": "Paquete Idioma Quechua",
+  "@packageQuechua": {
+    "description": "Nombre del paquete de idioma quechua"
+  },
+  "packagesCount": "3 paquetes",
+  "@packagesCount": {
+    "description": "Cantidad de paquetes disponibles"
+  },
+  "placesExplored": "4 lugares explorados",
+  "@placesExplored": {
+    "description": "Cantidad de lugares explorados"
+  },
+  "quechuaPackage": "Paquete de idioma quechua",
+  "@quechuaPackage": {
+    "description": "Paquete de idioma quechua disponible"
+  },
+  "translations": "248 traducciones",
+  "@translations": {
+    "description": "Cantidad total de traducciones"
+  },
+  "translationsToday": "+12 traducciones hoy",
+  "@translationsToday": {
+    "description": "Cantidad de traducciones realizadas hoy"
+  },
+  "version": "v1.0.0 • ULenguage",
+  "@version": {
+    "description": "Versión de la aplicación"
+  },
+  "welcomeUser": "¡Bienvenido, {user}!",
+  "@welcomeUser": {
+    "description": "Mensaje de bienvenida personalizado",
+    "placeholders": {
+      "user": {
+        "type": "Object",
+        "example": "Ana"
+      }
+    }
   }
 }
